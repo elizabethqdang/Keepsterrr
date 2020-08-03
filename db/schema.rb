@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_18_150355) do
+ActiveRecord::Schema.define(version: 2020_11_18_183438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,15 @@ ActiveRecord::Schema.define(version: 2020_11_18_150355) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "list_items", force: :cascade do |t|
+    t.integer "note_id", null: false
+    t.string "item", null: false
+    t.boolean "completed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["note_id"], name: "index_list_items_on_note_id"
+  end
+
   create_table "notes", force: :cascade do |t|
     t.string "title"
     t.string "body"
@@ -45,6 +54,13 @@ ActiveRecord::Schema.define(version: 2020_11_18_150355) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["owner_id"], name: "index_notes_on_owner_id"
+  end
+
+  create_table "pinned_notes", force: :cascade do |t|
+    t.integer "note_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["note_id"], name: "index_pinned_notes_on_note_id"
   end
 
   create_table "users", force: :cascade do |t|
