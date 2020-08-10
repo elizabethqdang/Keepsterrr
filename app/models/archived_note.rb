@@ -1,0 +1,2 @@
+class ArchivedNote < ApplicationRecord
+end

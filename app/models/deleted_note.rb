@@ -1,0 +1,2 @@
+class DeletedNote < ApplicationRecord
+end
