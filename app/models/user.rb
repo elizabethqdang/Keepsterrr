@@ -3,9 +3,33 @@ class User < ApplicationRecord
 	
 	before_validation	:ensure_session_token
 	
+	validates	:email, :password_digest, :session_token, presence: true
+	validates	:email, :session_token, uniqueness: true
+	validates :password, allow_nil: true, length: { minimum: 6 }
+	
+	has_many :notes,
+		foreign_key: :user_id,
+		class_name: :Note,
+		dependent: :destroy
+		
+	has_many :pinned_notes,
+		foreign_key: :user_id,
+		class_name: :PinnedNote,
+		dependent: :destroy
+	
+	def self.find_by_credentials(email, password)
+		user = User.find_by(email: email)
+		return nil unless user
+		user.valid_password?(password) ? user : nil
+	end
+		
 	def password=(password)
 		@password = password
 		self.password_digest = BCrypt::Password.create(password)
+	end
+	
+	def valid_password?(password)
+		BCrypt::Password.new(self.password_digest).is_password?(password)
 	end
 	
 	def ensure_session_token
