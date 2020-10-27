@@ -1,3 +1,169 @@
 // Place all the styles related to the Notes controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.noteDefaultForm {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #fafafa;
+	font-size: 15px;
+	padding: 0 20px;
+	width: 600px;
+	height: 48px;
+	box-shadow: 0 1px 6px #9c9c9c;
+	margin: 3px auto;
+	color: #737373;
+	font-family: 'Roboto Slab', serif;
+	font-weight: 10;
+}
+
+.noteDefaultForm:hover {
+	cursor: text;
+}
+
+.noteFormIcons,
+.pinIcon {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	/* width: 80px; */
+	height: 46px;
+}
+.noteFormIcons > i {
+	width: 46px;
+}
+
+.noteFormIcon {
+	height: 34px;
+	width: 34px;
+	margin: 0 10px;
+}
+
+.noteExpandedForm {
+	color: #737373;
+	background-color: #fafafa;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: flex-start;
+	border-radius: 2px;
+	width: 600px;
+	box-shadow: 0 1px 6px #9c9c9c;
+	margin: 3px auto;
+	min-height: 136px;
+	padding: 10px 15px;
+}
+
+.titleDiv {
+	height: 44px;
+}
+.titleDiv,
+textarea#titleForm {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	font-size: 17px;
+	font-family: 'Roboto', Arial, sans-serif;
+	color: black;
+	width: 100%;
+	font-weight: 400;
+	/* margin-top: 10px; */
+}
+
+#titleForm,
+#bodyForm {
+	width: 600px;
+	overflow-wrap: normal;
+	height: auto;
+}
+
+#bodyForm {
+	resize: none;
+	height: auto;
+}
+
+.bodyDiv,
+#bodyForm textarea {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size: 15px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	color: black;
+	width: 100%;
+	/* margin-top: 15px; */
+	line-break: 'anywhere';
+}
+
+#bodyForm textarea,
+textarea#titleForm {
+	width: 600px;
+	line-break: 50;
+	height: 100%;
+	resize: none;
+	border: none;
+}
+textarea:active,
+textarea::after,
+textarea::selection,
+textarea:focus {
+	border: none;
+	outline: none;
+}
+
+.formFooter {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 40px;
+}
+
+.toolbarBtns {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	height: 34px;
+}
+
+.noteIcon {
+	width: 34px;
+	height: 34px;
+	opacity: 0.71;
+	cursor: pointer;
+	margin: 0 10px;
+	margin-right: 10px;
+}
+
+.bottomClose {
+	font-size: 13px;
+	font-family: 'Roboto', sans-serif;
+	text-align: center;
+	border-radius: 3px;
+	height: 30px;
+	width: 78px;
+	display: flex;
+	flex-direction: center;
+	align-items: center;
+	justify-content: center;
+}
+
+.bottomClose:hover {
+	cursor: pointer;
+	background-color: #00000014;
+}
+
+.index-item-toolbar-img > input,
+.image-upload > input,
+.color-palette > input {
+	display: none;
+}
