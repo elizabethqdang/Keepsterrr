@@ -1,10 +1,10 @@
 class SessionsController < ApplicationController
+	
+	def new
+		render :new	
+	end
+	
 	def create
-		if logged_in?
-			render json: ['You are already logged in'], status: 401
-      return
-		end
-
     @user = User.find_by_credentials(
       params[:user][:email],
       params[:user][:password]
@@ -12,20 +12,16 @@ class SessionsController < ApplicationController
 		
     if @user
       login!(@user)
-      render "/api/users/show"
+			redirect_to user_url(@user)
 		else
-			render json: @user.errors.full_messages, status: 401
-      # render json: ["Invalid email/password combination"], status: 401
+			flash.new[:errors] = ['Invalid email or password.']
+			render :new
     end
   end
 
   def destroy
-    @user = current_user
-    if @user
-      logout!
-      redirect_to new_session_url
-    else
-      render json: ["You are not logged in"], status: 404
-    end
-  end
+    logout!
+    redirect_to new_session_url
+	end
+	
 end
