@@ -6,16 +6,14 @@ class User < ApplicationRecord
 	validates	:email, :password_digest, :session_token, presence: true
 	validates	:email, :session_token, uniqueness: true
 	validates :password, allow_nil: true, length: { minimum: 6 }
-	
+
 	has_many :notes,
 		foreign_key: :user_id,
 		class_name: :Note,
 		dependent: :destroy
 		
 	has_many :pinned_notes,
-		foreign_key: :user_id,
-		class_name: :PinnedNote,
-		dependent: :destroy
+		through: :notes,
 	
 	def self.find_by_credentials(email, password)
 		user = User.find_by(email: email)
