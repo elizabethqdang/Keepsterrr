@@ -7,7 +7,7 @@ module.exports = {
 module.exports = {
 	entry: "./frontend/keepster.jsx",
 	output: {
-		path: path.resolve(__dirname), 
+		path: path.resolve(__dirname, "app", "assets", "javascripts"),
 		filename: "bundle.js"
 	},
 	module: {

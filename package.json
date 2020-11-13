@@ -1,14 +1,41 @@
 {
   "name": "Keepsterrr",
   "version": "0.1.0",
-	"private": true,
-	"main": "index.js",
+  "description": "Keepster keeps note of all of your lightning bolt thoughts",
+  "private": true,
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "engines": {
+    "node": "6.10.1",
+    "npm": "3.10.10"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "webpack": "webpack --mode=development --watch",
+    "postinstall": "webpack --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elizabethqdang/Keepsterrr.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elizabethqdang/Keepsterrr/issues"
+  },
+  "homepage": "https://github.com/elizabethqdang/Keepsterrr#readme",
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
     "axios": "^0.20.0",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "8.1.0",
     "cra-template": "1.0.3",
     "css-loader": "^4.3.0",
     "lodash": "^4.17.20",
@@ -26,13 +53,8 @@
     "start": "^5.1.0",
     "styled-components": "^5.2.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "webpack": "webpack --mode=development --watch",
-    "postinstall": "webpack"
+  "devDependencies": {
+    "webpack-cli": "^4.1.0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,8 +70,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "webpack-cli": "^4.1.0"
   }
 }
