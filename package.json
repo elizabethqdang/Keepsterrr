@@ -17,8 +17,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "webpack": "webpack --mode=development --watch",
-    "postinstall": "webpack --mode=development"
+    "postinstall": "webpack",
+    "webpack": "webpack --mode=development --watch"
   },
   "repository": {
     "type": "git",
