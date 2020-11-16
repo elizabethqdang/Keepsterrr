@@ -5,7 +5,8 @@
   "private": true,
   "main": "index.js",
   "directories": {
-    "test": "test"
+    "test": "test",
+    "lib": "lib"
   },
   "engines": {
     "node": "6.10.1",
@@ -51,7 +52,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "start": "^5.1.0",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.0",
+    "webpack": "^4.44.1"
   },
   "devDependencies": {
     "webpack-cli": "^4.1.0"
