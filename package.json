@@ -9,8 +9,8 @@
     "lib": "lib"
   },
   "engines": {
-    "node": "6.10.1",
-    "npm": "3.10.10"
+    "node": "12.5.0",
+    "npm": "6.9.0"
   },
   "scripts": {
     "start": "react-scripts start",
