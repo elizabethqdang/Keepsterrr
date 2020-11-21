@@ -1,4 +1,5 @@
 class Api::SessionsController < ApplicationController
+
 	def create
     @user = User.find_by_credentials(
       params[:user][:email],
@@ -8,7 +9,8 @@ class Api::SessionsController < ApplicationController
       login!(@user)
       render "/api/users/show"
 		else
-			render json: @user.errors.full_messages, status: 401
+      render json: ["Invalid email/password combination"], status: 401
+			# render json: @user.errors.full_messages, status: 401
     end
   end
 
@@ -16,9 +18,11 @@ class Api::SessionsController < ApplicationController
     @user = current_user
     if @user
       logout!
-      redirect_to root_url
-    else
-      render json: @user.errors.full_messages, status: 404
+      redirect_to new_session_url
+		else
+      render json: ["You are not logged in"], status: 404
+      # render json: @user.errors.full_messages, status: 404
     end
   end
+
 end
