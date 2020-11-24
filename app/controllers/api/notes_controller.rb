@@ -25,6 +25,7 @@ class Api::NotesController < ApplicationController
 			render "/api/notes/show"
 		else 
 			render json: @note.errors.full_messages, status: 401
+		end
 	end
 	
 	def destroy

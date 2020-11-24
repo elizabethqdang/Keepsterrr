@@ -9,15 +9,19 @@ class Note < ApplicationRecord
 	after_initialize { self.pinned = false if self.pinned.nil? }
 	
 	belongs_to :user,
-		foreign_key: :user_id,
+		foreign_key: :owner_id,
 		class_name: :User
 	
-	has_many :pinnned,
+	has_many :pinnnedNotes,
 		foreign_key: :pinned_id,
 		class_name: :PinnedNote
 	
-	has_many :items,
+	has_many :lists,
 		foreign_key: :item_id,
-		class_name: :ListItem
+		class_name: :List
+		
+	has_many :list_items,
+		through: :lists,
+		source: :list_items
 		
 end
