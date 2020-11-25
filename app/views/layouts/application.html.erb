@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
+		<meta charset="utf-8" />
     <title>Keepsterrr</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-		<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload'  %>
-    <%= favicon_link_tag 'favicon.png' %>
+		<%= javascript_include_tag 'application' %>
+    <%= stylesheet_link_tag    'application', media: 'all' %>
 		
   </head>
 
   <body>
+		<script type="text/javascript">
+			window.splashWrapper = "<%= image_url('splash_wrapper.jpg') %>"
+		</script>
+		
     <%= yield %>
   </body>
 </html>

@@ -29,13 +29,13 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
   
-  def require_logged_out
-    redirect_to user_url(current_user) if logged_in?
-  end
+  # def require_logged_out
+  #   redirect_to user_url(current_user) if logged_in?
+  # end
 
   def require_logged_in
-    unless logged_in?
-      redirect_to new_session_url
+		unless current_user
+			render json: { base: ['invalid credentials'] }, status: 401
     end
 	end
 	
