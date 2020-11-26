@@ -1,20 +1,20 @@
 export const login = user =>
 	$.ajax({
-		metthod: 'POST',
+		method: 'POST',
 		url: '/api/session',
 		data: { user }
 	})
 	
 export const signup = user =>
 	$.ajax({
-		metthod: 'POST',
+		method: 'POST',
 		url: '/api/users',
 		data: { user }
 	})
 	
 export const logout = user =>
 	$.ajax({
-		metthod: 'DELETE',
+		method: 'DELETE',
 		url: '/api/session'
 	})
 	

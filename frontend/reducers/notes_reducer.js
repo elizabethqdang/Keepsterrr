@@ -1,4 +1,6 @@
-import { RECEIVE_NOTES, RECEIVE_NOTE, REMOVE_NOTE, NOTE_ERROR } from '../actions/note_actions';
+import merge from 'lodash/merge';
+import { RECEIVE_ALL_NOTES, RECEIVE_NOTE, REMOVE_NOTE, NOTE_ERROR } from "../actions/note_actions";
+import { LOGOUT_CURRENT_USER } from "../actions/session_actions";
 
 const _initialState = {
 	"1": {
@@ -79,12 +81,13 @@ const notesReducer = (state = _initialState, action) => {
   Object.freeze(state);
 
   switch(action.type){
-    case RECEIVE_NOTES:
+    case RECEIVE_ALL_NOTES:
 			const notes = {}
       action.notes.forEach(note => {
         notes[note.id] = note;
 			});
-      return notes;
+			return notes;
+			// return action.notes;
     case RECEIVE_NOTE:
 			return Object.assign({}, state, { [action.note.id]: action.note });
     case REMOVE_NOTE:
@@ -92,7 +95,9 @@ const notesReducer = (state = _initialState, action) => {
       delete nextState[action.note.id];
       return nextState;
     case NOTE_ERROR:
-      alert(action.error);
+			alert(action.error);
+		case LOGOUT_CURRENT_USER:
+			return {};
     default:
       return state;
   }

@@ -6,7 +6,7 @@ export const fetchAllNotes = () => (
 	})
 );
 
-export const fetchNote = noteId => (
+export const fetchNote = (noteId) => (
 	$.ajax({
 		method: 'GET',
 		url: `/api/notes/${noteId}`,
@@ -17,7 +17,7 @@ export const fetchNote = noteId => (
 export const createNote = (note) => (
 	$.ajax({
 		method: 'POST',
-		url: 'api/notes',
+		url: '/api/notes',
 		processData: false,
 		contentType: false,
 		dataType: 'json',
@@ -25,7 +25,7 @@ export const createNote = (note) => (
 	})
 );
 
-export const updateNote = (note, noteId) => (
+export const updateNote = (noteId) => (
 	$.ajax({
 		method: 'PATCH',
 		url: `api/notes/${noteId}`,
@@ -40,6 +40,5 @@ export const deleteNote = (noteId) => (
 	$.ajax({
 		method: 'DELETE',
 		url: `/api/notes/${noteId}`
-		// url: `api/tracks/${trackId}/notes/${noteId}`
 	})
 );

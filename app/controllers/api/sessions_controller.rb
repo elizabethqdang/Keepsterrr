@@ -1,6 +1,11 @@
 class Api::SessionsController < ApplicationController
 
 	def create
+		if logged_in?
+			render json: ['You are already logged in'], status: 401
+      return
+		end
+		
     @user = User.find_by_credentials(
       params[:user][:email],
       params[:user][:password]

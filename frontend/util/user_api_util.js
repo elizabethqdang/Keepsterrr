@@ -6,18 +6,10 @@ export const fetchAllUsers = () => (
 	})
 );
 
-export const fetchUser = () => (
+export const fetchUser = (userId) => (
 	$.ajax({
 		method: 'GET',
-		url: `/api/${userId}`,
+		url: `/api/users/${userId}`,
 		dataType: 'json'
-	})
-);
-
-export const fetchCurrentUser = currentUserId => (
-	$.ajax({
-		method: 'GET',
-		url: `/api/${currentUserId}`,
-		data: { currentUser: currentUserId }
 	})
 );

@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 	helper_method :current_user, :logged_in?
 	
 	private
+	
 	def current_user
     return nil unless session[:session_token]
 
@@ -29,9 +30,9 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
   
-  # def require_logged_out
-  #   redirect_to user_url(current_user) if logged_in?
-  # end
+  def require_logged_out
+    redirect_to user_url(current_user) if logged_in?
+  end
 
   def require_logged_in
 		unless current_user
