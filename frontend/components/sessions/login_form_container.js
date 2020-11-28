@@ -1,21 +1,22 @@
 import { connect } from 'react-redux';
-import React from 'react';
+import { login, clearSessionErrors, receiveSessionErrors } from '../../actions/session_actions'
 import LoginForm from './login_form';
 
-const mapStateToProps = ({ errors }) => {
+const mapStateToProps = (state) => {
 	return {
 		formType: 'login',
+		loggedIn: Boolean(state.session.currentUser),
+		errors: state.errors.session || [],
+		currentUser: state.session.currentUser || {}
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		processForm: (user) => dispatch(login(user)),
-		otherForm: (
-			<button onClick={() => dispatch(openModal('signup'))}>
-				Signup
-      </button>
-		)
+		login: (user) => dispatch(login(user)),
+		clearSessionErrors: () => dispatch(clearSessionErrors()),
+		receiveSessionErrors: () => dispatch(receiveSessionErrors()),
+		processForm: (user) => dispatch(login(user))
 	};
 };
 
