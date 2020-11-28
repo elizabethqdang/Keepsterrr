@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Keepster keeps note of all of your lightning bolt thoughts",
   "private": true,
-  "main": "index.js",
   "directories": {
     "test": "test",
     "lib": "lib"
@@ -14,6 +13,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "build": "NODE_ENV=production webpack --config ./webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "webpack",
     "webpack": "webpack --mode=development --watch"
