@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: notes
+#
+#  id         :bigint           not null, primary key
+#  title      :string
+#  body       :string
+#  owner_id   :integer          not null
+#  pinned     :boolean          default(FALSE), not null
+#  list       :boolean          default(FALSE), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Note < ApplicationRecord
 	
 	validates :title, length: { maximum: 999 }
@@ -7,6 +20,8 @@ class Note < ApplicationRecord
 
 	after_initialize { self.list = false if self.list.nil? }
 	after_initialize { self.pinned = false if self.pinned.nil? }
+	
+	has_one_attached :photo
 	
 	belongs_to :user,
 		foreign_key: :owner_id,

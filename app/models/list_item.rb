@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: list_items
+#
+#  id         :bigint           not null, primary key
+#  note_id    :integer          not null
+#  list_id    :integer          not null
+#  owner_id   :integer          not null
+#  item       :string           not null
+#  completed  :boolean          default(FALSE), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class ListItem < ApplicationRecord
 	
 	validates :item, presence: true, length: { maximum: 999 }
