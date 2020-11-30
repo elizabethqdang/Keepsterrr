@@ -24,14 +24,14 @@ class Sidebar extends React.Component {
 					<label htmlFor="notesIcon">
 						<i class="fas fa-bolt fa-lg" style={{fontSize:"22px",width:"auto",height:"auto"}}></i>
 					</label>
-					{/* <button id="notesIcon"/> */}
+					<button id="notesIcon"/>
 					<a href="#" id="notesIcon" className="">Notes</a>
 				</div>
 				<div className="archive-btn sidebar-icon">
 					<label htmlFor="archiveIcon">
 						<i class="fas fa-archive fa-md"></i>
 					</label>
-					{/* <button id="archiveIcon" /> */}
+					<button id="archiveIcon" />
 					<a href="#" id="archiveIcon" className="" value="Archive">Archive</a>
 				</div>
 				<div
@@ -40,7 +40,7 @@ class Sidebar extends React.Component {
 						<i class="far fa-trash-alt fa-lg"></i>
 					</label>
 					<button id="trashIcon" value="Trash">Trash</button>
-					{/* <a href="#" id="trashIcon" className=""></a> */}
+					<a href="#" id="trashIcon" className=""></a>
 				</div>
 
 			</div>

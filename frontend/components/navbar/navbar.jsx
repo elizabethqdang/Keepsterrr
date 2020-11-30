@@ -20,12 +20,10 @@ class Navbar extends React.Component {
 		};
 	}
 
-
 	logoutUser(e) {
 		e.preventDefault();
-		this.props.logout().then(
-			this.props.history.push("/login")
-		);
+		this.props.logout();
+		window.location.hash = "/login";
 	}
 
 	navLeft() {
@@ -82,8 +80,7 @@ class Navbar extends React.Component {
 					<li className="dropdown">
 						<div className="nav-user-button dropbtn">
 							<div className="nav-user-username truncate dropbtn">
-								{/* {currentUser ? currentUser.email || } */}
-								username
+								{currentUser ? currentUser.email : "Hello"}
 							</div>
 							<div className="nav-user-image dropbtn">
 								{/* <span><img src={currentUser.profileImgUrl || ""} /></span> */}
@@ -92,7 +89,7 @@ class Navbar extends React.Component {
 						</div>
 
 						<div className="dropdown-content">
-							<div onClick={logout} className="nav-sign-out"> Sign Out
+							<div onClick={(e) => this.logoutUser(e)} className="nav-sign-out"> Sign Out
 								</div>
 						</div>
 					</li>
@@ -136,4 +133,4 @@ class Navbar extends React.Component {
 	}
 }
 
-export default (Navbar);
+export default withRouter(Navbar);
