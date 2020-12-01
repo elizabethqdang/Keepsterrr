@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import NoteDetailContainer from './note_detail_container';
 
 class NoteDetail extends React.Component {
@@ -135,4 +136,4 @@ class NoteDetail extends React.Component {
 	}
 }
 
-export default NoteDetail;
+export default withRouter(NoteDetail);
