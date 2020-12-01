@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
 
 class NoteForm extends React.Component {
 	constructor(props) {
@@ -248,4 +249,4 @@ class NoteForm extends React.Component {
 	}
 };
 
-export default NoteForm;
+export default withRouter(NoteForm);

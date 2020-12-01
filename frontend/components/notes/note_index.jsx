@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 // import Masonry from 'react-masonry-component';
 import Masonry from 'react-masonry-css';
 // Components
@@ -28,7 +29,8 @@ class NoteIndex extends React.Component {
 				{notes.map(note => 
 					<ul className="todo-list">
 						<NoteIndexItem
-							key={`note-list-item${note.id}`}
+							key={note.id}
+							// key={`note-list-item${note.id}`}
 							note={note}
 							receiveNote={this.props.receiveNote}
 							removeNote={this.props.removeNote}
@@ -49,4 +51,4 @@ class NoteIndex extends React.Component {
 	}
 }
 
-export default NoteIndex;
+export default withRouter(NoteIndex);

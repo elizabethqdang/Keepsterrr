@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
 
 // Components
 
@@ -122,8 +123,8 @@ class NoteDetail extends React.Component {
 				
 			</div>
 		</Fragment>
-		);
+		)
 	}
 }
 
-export default NoteDetail;
+export default withRouter(NoteDetail);

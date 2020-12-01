@@ -9,7 +9,8 @@ const mapStateToProps = state => {
 	return {
 		notes: state.notes,
 		pinned: state.notes.pinned,
-		currentUser: state.session.currentUser
+		currentUser: state.session.currentUser || {},
+		loggedIn: Boolean(state.session.currentUser),
 	};
 };
 
