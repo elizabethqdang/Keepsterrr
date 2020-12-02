@@ -21,7 +21,7 @@ class Note < ApplicationRecord
 	after_initialize { self.list = false if self.list.nil? }
 	after_initialize { self.pinned = false if self.pinned.nil? }
 	
-	has_one_attached :photo
+	has_one_attached :image
 	
 	belongs_to :user,
 		foreign_key: :owner_id,

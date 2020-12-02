@@ -6,6 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+# ActiveRecord::Base.connection.reset_pk_sequence!(table_name)
+
 require 'open-uri'
 
 User.destroy_all
@@ -14,9 +16,9 @@ List.destroy_all
 ListItem.destroy_all
 PinnedNote.destroy_all
 
-u1 = User.create({ email: "demo-user@keepsterrr.com", password: "password" })
+u1 = User.create({ email: "demo-user@keepsterrr.com", password: "password"})
 	
-u2 = User.create({ email: "maxwellthepig@keepsterrr.com", password: "hunter12" })
+u2 = User.create({ email: "maxwellthepig@keepsterrr.com", password: "hunter12"})
 
 n1 = Note.create({ title: "note demo", body: "test test test", owner_id: u1.id, pinned: false, list: false })
 l1 = Note.create(	{ title: "list demo", body: "", owner_id: u1.id, pinned: false, list: true })
