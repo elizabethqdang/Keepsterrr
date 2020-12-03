@@ -90,29 +90,33 @@
 /*!******************************************!*\
   !*** ./frontend/actions/note_actions.js ***!
   \******************************************/
-/*! exports provided: RECEIVE_ALL_NOTES, RECEIVE_NOTE, REMOVE_NOTE, ALL_NOTES, NOTE_ERROR, receiveAllNotes, receiveNote, removeNote, allNotes, noteError, fetchAllNotes, fetchNote, createNote, updateNote, deleteNote */
+/*! exports provided: RECEIVE_ALL_NOTES, RECEIVE_NOTES, RECEIVE_NOTE, REMOVE_NOTE, ALL_NOTES, NOTE_ERROR, receiveAllNotes, receiveNotes, receiveNote, removeNote, allNotes, noteError, fetchAllNotes, fetchNotes, fetchNote, createNote, updateNote, deleteNote */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_ALL_NOTES", function() { return RECEIVE_ALL_NOTES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_NOTES", function() { return RECEIVE_NOTES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_NOTE", function() { return RECEIVE_NOTE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_NOTE", function() { return REMOVE_NOTE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ALL_NOTES", function() { return ALL_NOTES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NOTE_ERROR", function() { return NOTE_ERROR; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "receiveAllNotes", function() { return receiveAllNotes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "receiveNotes", function() { return receiveNotes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "receiveNote", function() { return receiveNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeNote", function() { return removeNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "allNotes", function() { return allNotes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noteError", function() { return noteError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchAllNotes", function() { return fetchAllNotes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchNotes", function() { return fetchNotes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchNote", function() { return fetchNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNote", function() { return createNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateNote", function() { return updateNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteNote", function() { return deleteNote; });
 /* harmony import */ var _util_note_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/note_api_util */ "./frontend/util/note_api_util.js");
 
-var RECEIVE_ALL_NOTES = 'RECEIVE_NOTES';
+var RECEIVE_ALL_NOTES = 'RECEIVE_ALL_NOTES';
+var RECEIVE_NOTES = 'RECEIVE_NOTES';
 var RECEIVE_NOTE = 'RECEIVE_NOTE';
 var REMOVE_NOTE = 'REMOVE_NOTE';
 var ALL_NOTES = 'ALL_NOTES';
@@ -120,6 +124,12 @@ var NOTE_ERROR = 'NOTE_ERROR';
 var receiveAllNotes = function receiveAllNotes(notes) {
   return {
     type: RECEIVE_ALL_NOTES,
+    notes: notes
+  };
+};
+var receiveNotes = function receiveNotes(notes) {
+  return {
+    type: RECEIVE_NOTES,
     notes: notes
   };
 };
@@ -134,9 +144,7 @@ var removeNote = function removeNote(note) {
     type: REMOVE_NOTE,
     note: note
   };
-}; // export const pinnedNotes = ({ notes }) =>
-// });
-
+};
 var allNotes = function allNotes(_ref) {
   var notes = _ref.notes;
   return Object.keys(notes).map(function (id) {
@@ -153,21 +161,30 @@ var fetchAllNotes = function fetchAllNotes() {
   return function (dispatch) {
     return _util_note_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchAllNotes"]().then(function (notes) {
       return dispatch(receiveAllNotes(notes));
-    }, function (errors) {
-      return dispatch(noteError(errors.responseJSON));
+    }, function (error) {
+      return dispatch(noteError(error.responseJSON));
     });
   };
 };
-var fetchNote = function fetchNote(id) {
+var fetchNotes = function fetchNotes(filter, value) {
   return function (dispatch) {
-    return _util_note_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchNote"](id).then(function (note) {
+    return _util_note_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchNotes"](filter, value).then(function (notes) {
+      return dispatch(receiveAllNotes(notes));
+    }, function (error) {
+      return dispatch(noteError(error.responseJSON));
+    });
+  };
+};
+var fetchNote = function fetchNote(noteId) {
+  return function (dispatch) {
+    return _util_note_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchNote"](noteId).then(function (note) {
       return dispatch(receiveNote(note));
     });
   };
 };
-var createNote = function createNote(note) {
+var createNote = function createNote(note, userId) {
   return function (dispatch) {
-    return _util_note_api_util__WEBPACK_IMPORTED_MODULE_0__["createNote"](note).then(function (note) {
+    return _util_note_api_util__WEBPACK_IMPORTED_MODULE_0__["createNote"](note, userId).then(function (note) {
       return dispatch(receiveNote(note));
     });
   };
@@ -236,8 +253,7 @@ var clearSessionErrors = function clearSessionErrors() {
 };
 var logoutCurrentUser = function logoutCurrentUser(currentUser) {
   return {
-    type: LOGOUT_CURRENT_USER,
-    currentUser: currentUser
+    type: LOGOUT_CURRENT_USER
   };
 };
 var signup = function signup(user) {
@@ -245,7 +261,7 @@ var signup = function signup(user) {
     return _util_session_api_util__WEBPACK_IMPORTED_MODULE_0__["signup"](user).then(function (user) {
       return dispatch(receiveCurrentUser(user));
     }, function (errors) {
-      return dispatch(receiveSessionErrors(errors.responseJSON)), console.log(errors.responseJSON);
+      return dispatch(receiveSessionErrors(errors.responseJSON)), console.log(errors);
     });
   };
 };
@@ -254,14 +270,14 @@ var login = function login(user) {
     return _util_session_api_util__WEBPACK_IMPORTED_MODULE_0__["login"](user).then(function (user) {
       return dispatch(receiveCurrentUser(user));
     }, function (errors) {
-      return dispatch(receiveSessionErrors(errors.responseJSON)), console.log(errors.responseJSON);
+      return dispatch(receiveSessionErrors(errors.responseJSON)), console.log(errors);
     });
   };
 };
-var logout = function logout(user) {
+var logout = function logout() {
   return function (dispatch) {
-    return _util_session_api_util__WEBPACK_IMPORTED_MODULE_0__["logout"](user).then(function (user) {
-      return dispatch(logoutCurrentUser(null));
+    return _util_session_api_util__WEBPACK_IMPORTED_MODULE_0__["logout"]().then(function (user) {
+      return dispatch(logoutCurrentUser());
     }, // user => (dispatch(receiveCurrentUser(null))),
     function (errors) {
       return dispatch(receiveSessionErrors(errors.responseJSON));
@@ -303,10 +319,11 @@ var RECEIVE_SINGLE_USER = "RECEIVE_SINGLE_USER";
 var RECEIVE_ALL_USERS = "RECEIVE_ALL_USERS";
 var RECEIVE_USER_ERRORS = "RECEIVE_USER_ERRORS";
 
-var receiveUser = function receiveUser(user) {
+var receiveUser = function receiveUser(payload) {
   return {
     type: RECEIVE_USER,
-    user: user
+    user: payload.user || {},
+    notes: payload.notes || {}
   };
 };
 
@@ -335,9 +352,9 @@ var receiveAllUsers = function receiveAllUsers(users) {
 
 var fetchUser = function fetchUser(userId) {
   return function (dispatch) {
-    return _util_user_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchUser"](userId).then(function (user) {
-      dispatch(receiveUser(user));
-      return user;
+    return _util_user_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchUser"](userId).then(function (payload) {
+      dispatch(receiveUser(payload));
+      return payload;
     }, function (errors) {
       dispatch(receiveUserErrors(errors.responseJSON));
       console.log(errors.responseJSON);
@@ -347,12 +364,10 @@ var fetchUser = function fetchUser(userId) {
 };
 var fetchSingleUser = function fetchSingleUser(userId) {
   return function (dispatch) {
-    return _util_user_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchUser"](userId).then(function (user) {
-      dispatch(receiveSingleUser(user));
-      return user;
+    _util_user_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchUser"](userId).then(function (user) {
+      return dispatch(receiveSingleUser(user));
     }, function (errors) {
-      dispatch(receiveUserErrors(errors.responseJSON));
-      return errors;
+      return dispatch(receiveUserErrors(errors.responseJSON));
     });
   };
 };
@@ -426,7 +441,7 @@ var App = function App() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["AuthRoute"], {
     exact: true,
     path: "/",
-    component: _splash_splash_container__WEBPACK_IMPORTED_MODULE_7__["default"]
+    component: _sessions_signup_form_container__WEBPACK_IMPORTED_MODULE_4__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["AuthRoute"], {
     exact: true,
     path: "/signup",
@@ -436,15 +451,16 @@ var App = function App() {
     path: "/login",
     component: _sessions_login_form_container__WEBPACK_IMPORTED_MODULE_3__["default"]
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["ProtectedRoute"], {
-    path: "/u/",
+    path: "/",
     component: _user_user_show_container__WEBPACK_IMPORTED_MODULE_12__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["ProtectedRoute"], {
-    exact: true,
-    path: "/u/:userId",
+    path: "/notes",
     component: _notes_note_index_container__WEBPACK_IMPORTED_MODULE_9__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["ProtectedRoute"], {
-    exact: true,
-    path: "/u/:userId/#NOTE/:noteId",
+    path: "/notes/:noteId",
+    component: _notes_note_index_item__WEBPACK_IMPORTED_MODULE_11__["default"]
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["ProtectedRoute"], {
+    path: "/notes/:noteId",
     component: _notes_note_detail_container__WEBPACK_IMPORTED_MODULE_10__["default"]
   }));
 };
@@ -589,7 +605,7 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
     }
   }, {
     key: "navUserLinks",
-    value: function navUserLinks(currentUser, logout) {
+    value: function navUserLinks() {
       var _this3 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -609,7 +625,7 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
         className: "nav-user-button dropbtn"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "nav-user-username truncate dropbtn"
-      }, currentUser ? currentUser.email : "Hello"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, this.props.currentUser ? this.props.currentUser.email : "Hello"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "nav-user-image dropbtn"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", null)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "dropdown-content"
@@ -628,7 +644,7 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
           logout = _this$props.logout;
       var navLeft = this.navLeft();
       var navSearch = this.navSearch();
-      var navRight = this.navUserLinks(currentUser, logout);
+      var navRight = this.navUserLinks();
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
         id: "navbar"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
@@ -673,7 +689,8 @@ var mapStateToProps = function mapStateToProps(state) {
   return {
     loggedIn: Boolean(state.session.currentUser),
     currentUser: state.session.currentUser || {},
-    users: state.users
+    users: state.users || {},
+    notes: state.notes || {}
   };
 };
 
@@ -740,9 +757,9 @@ var Sidebar = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, Sidebar);
 
     _this = _super.call(this, props);
-    _this.state = {
-      showExpandedSidebar: true
+    _this.state = {// showExpandedSidebar: true
     };
+    _this.sidebarClick = _this.sidebarClick.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -754,8 +771,16 @@ var Sidebar = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "sidebarClick",
+    value: function sidebarClick(e, icon) {
+      e.preventDefault();
+      window.location.hash = "/".concat(icon);
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var openSidebar = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "sidebar",
         className: "expanded-sidebar"
@@ -806,14 +831,42 @@ var Sidebar = /*#__PURE__*/function (_React$Component) {
       })));
       var closedSidebar = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "sidebar",
-        className: "mini-sidebar"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#"
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#"
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#"
-      }));
+        className: "icon-sidebar"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "sidebar-row",
+        onClick: function onClick(e) {
+          return _this2.sidebarClick(e, "notes");
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["NavLink"], {
+        to: "/users/notes",
+        activeClassName: "selected"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
+        d: "M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.997 4.997 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"
+      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "sidebar-row",
+        onClick: function onClick(e) {
+          return _this2.sidebarClick(e, "lists");
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        class: "fas fa-bolt fa-lg",
+        style: {
+          fontSize: "22px",
+          width: "auto",
+          height: "auto"
+        }
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "sidebar-row",
+        onClick: function onClick(e) {
+          return _this2.sidebarClick(e, "trash");
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        class: "far fa-trash-alt fa-lg"
+      })));
 
       if (this.state.showExpandedSidebar) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, openSidebar);
@@ -1136,14 +1189,17 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
+      userId: _this.props.currentUser.id,
       title: "",
       body: "",
       color: "#fffff",
-      image: null,
+      imageFile: null,
+      imageUrl: null,
+      list: false,
       pinned: false,
       created_at: "",
       updated_at: "",
-      owner: _this.props.currentUser,
+      ownerId: _this.props.currentUser.id,
       defaultForm: true,
       clicked: false
     };
@@ -1157,10 +1213,54 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.submitForm = _this.submitForm.bind(_assertThisInitialized(_this));
+    _this.handleImage = _this.handleImage.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(NoteForm, [{
+    key: "handleImage",
+    value: function handleImage(e) {
+      var _this2 = this;
+
+      var reader = new FileReader();
+      var file = e.currentTarget.files[0];
+
+      reader.onloadend = function () {
+        return _this2.setState({
+          imageUrl: reader.result,
+          imageFile: file
+        });
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      } else {
+        this.setState({
+          imageUrl: "",
+          imageFule: null
+        });
+      }
+    }
+  }, {
+    key: "handleImageSubmit",
+    value: function handleImageSubmit(e) {
+      e.preventDefault();
+      var formData = new FormData();
+      formData.apeend();
+
+      if (this.state.imageFile) {
+        formData.append('note[image]', this.state.imageFile);
+      }
+
+      $.ajax({
+        url: '/api/notes',
+        method: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false
+      });
+    }
+  }, {
     key: "handleClickOnDefaultForm",
     value: function handleClickOnDefaultForm(e) {
       e.stopPropagation(); // const defaultClassName =(element) => {
@@ -1226,10 +1326,10 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "update",
     value: function update(property) {
-      var _this2 = this;
+      var _this3 = this;
 
       return function (e) {
-        return _this2.setState(_defineProperty({}, property, e.target.value));
+        return _this3.setState(_defineProperty({}, property, e.target.value));
       };
     }
   }, {
@@ -1243,30 +1343,46 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "submitForm",
     value: function submitForm() {
-      if (this.state.title !== "" || this.state.body !== "") {
-        this.props.receiveNote({
-          // id: this.props.currentUser,
-          title: this.state.title,
-          body: this.state.body,
-          created_at: Date(new Date().getTime()),
-          updated_at: "",
-          pinned: this.state.pinned,
-          color: this.state.color,
-          image: null,
-          owner: this.props.currentUser
-        });
+      // e.preventDefault();
+      var formData = new FormData();
+      formData.append('note[title]', this.state.title);
+      formData.append('note[body]', this.state.body);
+      formData.append('note[owner_id]', this.state.ownerId);
+      formData.append('note[title]', this.state.title);
+      formData.append('note[pinned]', this.state.pinned);
+      formData.append('note[list]', this.state.list);
+      formData.append('note[color]', this.state.color);
+
+      if (this.state.imageFile) {
+        formData.append('note[image]', this.state.imageFile);
       }
+
+      if (this.state.title !== "" || this.state.body !== "") {
+        this.props.createNote(formData, this.state.userId);
+      }
+
+      ; // this.props.receiveNote({
+      // 	title: this.state.title,
+      // 	body: this.state.body,
+      // 	created_at: Date (new Date().getTime()),
+      // 	pinned: this.state.pinned,
+      // 	color: this.state.color,
+      // 	image: null,
+      // 	owner: this.props.currentUser
+      // });
 
       this.toggleForm();
       this.setState({
         title: "",
         body: "",
         pinned: "false",
+        list: "false",
         created_at: "",
         updated: "",
         color: "white",
-        image: "null",
-        owner: ""
+        imageUrl: "null",
+        imageFile: "null",
+        ownerId: ""
       });
     }
   }, {
@@ -1298,13 +1414,13 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       var expandedForm = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         className: "noteExpandedForm",
         id: "newForm",
         onSubmit: function onSubmit(e) {
-          return _this3.handleSubmit(e);
+          return _this4.handleSubmit(e);
         },
         style: {
           backgroundColor: this.state.color
@@ -1396,10 +1512,10 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
           {
             e.stopPropagation();
 
-            _this3.toggleForm();
+            _this4.toggleForm();
 
-            document.addEventListener('mousedown', _this3.handleOuterClick);
-            document.addEventListener('keydown', _this3.handleKeyDown);
+            document.addEventListener('mousedown', _this4.handleOuterClick);
+            document.addEventListener('keydown', _this4.handleKeyDown);
           }
         }
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Take a note... "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1437,32 +1553,50 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/note_actions */ "./frontend/actions/note_actions.js");
-/* harmony import */ var _note_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./note_form */ "./frontend/components/notes/note_form.jsx");
+/* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/user_actions */ "./frontend/actions/user_actions.js");
+/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var _note_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./note_form */ "./frontend/components/notes/note_form.jsx");
 
 
 
 
-var mapStateToProps = function mapStateToProps(state) {
+
+
+var mapStateToProps = function mapStateToProps(state, ownProps) {
   return {
-    notes: Object.values(state.notes),
-    pinned: state.notes.pinned,
+    notes: state.notes || {},
+    // pinned: state.notes.pinned,
     currentUser: state.session.currentUser || {},
-    loggedIn: Boolean(state.session.currentUser)
+    loggedIn: Boolean(state.session.currentUser),
+    users: state.users || {},
+    errors: state.errors.note || {}
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    receiveNote: function receiveNote(note) {
-      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["receiveNote"])(note));
+    createNote: function createNote(note, id) {
+      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["createNote"])(note, id));
+    },
+    fetchAllNotes: function fetchAllNotes() {
+      return dispatch(fetchAllNotse());
+    },
+    fetchNote: function fetchNote(noteId) {
+      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["fetchNote"])(noteId));
+    },
+    fetchUser: function fetchUser(userId) {
+      return dispatch(Object(_actions_user_actions__WEBPACK_IMPORTED_MODULE_2__["fetchUser"])(userId));
     },
     removeNote: function removeNote() {
       return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["removeNote"])(note));
+    },
+    fetchCurrentUser: function fetchCurrentUser(userId) {
+      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_3__["fetchCurrentUser"])(userId));
     }
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_note_form__WEBPACK_IMPORTED_MODULE_2__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_note_form__WEBPACK_IMPORTED_MODULE_4__["default"]));
 
 /***/ }),
 
@@ -1481,7 +1615,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_masonry_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-masonry-css */ "./node_modules/react-masonry-css/dist/react-masonry-css.es5.js");
 /* harmony import */ var react_masonry_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_masonry_css__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _note_index_item__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./note_index_item */ "./frontend/components/notes/note_index_item.jsx");
-/* harmony import */ var _note_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./note_form */ "./frontend/components/notes/note_form.jsx");
+/* harmony import */ var _note_form_container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./note_form_container */ "./frontend/components/notes/note_form_container.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1524,30 +1658,39 @@ var NoteIndex = /*#__PURE__*/function (_React$Component) {
   }
 
   _createClass(NoteIndex, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.props.fetchAllNotes();
+      this.props.fetchCurrentUser(this.props.currentUser.id);
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this = this;
 
       var notes = this.props.notes;
+      console.log(this.props.notes);
       var breakpointColumnsObj = {
         default: 4,
         1100: 3,
         700: 2,
         500: 1
       };
-      var randomHeight = Math.random() * (550 - 100) + 100;
-      console.log(randomHeight);
+      var randomHeight = Math.random() * (550 - 100) + 100; // console.log(randomHeight);
+
       var noteItems = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_masonry_css__WEBPACK_IMPORTED_MODULE_2___default.a, {
         className: "notesIndexIndividualWrapper masonry-grid",
         breakpointCols: breakpointColumnsObj,
         columnClassName: "masonry-grid-column"
-      }, notes.map(function (note) {
+      }, this.props.notes.map(function (note) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
           className: "todo-list"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_note_index_item__WEBPACK_IMPORTED_MODULE_3__["default"], {
           key: note.id // key={`note-list-item${note.id}`}
           ,
           note: note,
+          notes: _this.props.notes,
+          users: _this.props.users,
           receiveNote: _this.props.receiveNote,
           removeNote: _this.props.removeNote // style={{height:}}
 
@@ -1556,8 +1699,15 @@ var NoteIndex = /*#__PURE__*/function (_React$Component) {
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "notesIndexWrapper"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_note_form__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        receiveNote: this.props.receiveNote
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_note_form_container__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        notes: this.props.notes,
+        users: this.props.users,
+        createNote: this.props.createNote,
+        currentUser: this.props.currentUser,
+        fetchAllNotes: this.props.fetchAllNotes,
+        fetchNote: this.props.fetchNote,
+        fetchUser: this.props.fetchUser,
+        fetchCurrentUser: this.props.fetchCurrentUser
       }), noteItems);
     }
   }]);
@@ -1578,44 +1728,58 @@ var NoteIndex = /*#__PURE__*/function (_React$Component) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _note_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./note_index */ "./frontend/components/notes/note_index.jsx");
-/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/note_actions */ "./frontend/actions/note_actions.js");
-/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _note_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./note_index */ "./frontend/components/notes/note_index.jsx");
+/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/note_actions */ "./frontend/actions/note_actions.js");
+/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/user_actions */ "./frontend/actions/user_actions.js");
+
 
  // Actions
 
 
 
 
-var mapStateToProps = function mapStateToProps(state) {
-  var allNotes = Object.values(state.notes); // const notes = allNotes.map((note, ) => Object.entries(note)
-  // );
 
-  console.log(allNotes);
+var mapStateToProps = function mapStateToProps(state) {
+  var allNotes = Object.keys(state.notes).map(function (id) {
+    return state.notes[id];
+  }); // const notes = allNotes.map((id) => allNotes[id]);
+
+  console.log("note index state", state);
+  console.log("note index allNotes", allNotes);
   return {
-    notes: allNotes,
-    pinned: state.notes.pinned,
-    currentUser: state.session.currentUser || {},
-    loggedIn: Boolean(state.session.currentUser)
+    notes: allNotes || {},
+    // notes: state.notes || {},
+    users: state.users || {},
+    // pinned: state.notes.pinned,
+    loggedIn: Boolean(state.session.currentUser),
+    currentUser: state.session.currentUser || {}
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    receiveNote: function receiveNote(note) {
-      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_2__["receiveNote"])(note));
-    },
-    removeNote: function removeNote() {
-      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_2__["removeNote"])(note));
-    },
+    // receiveNote: note => dispatch(receiveNote(note)),
+    // receiveNotes: notes => dispatch(receiveAllNotes(notes)),
+    // removeNote: () => dispatch(removeNote(note)),
     logout: function logout(user) {
-      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_3__["logout"])(null));
+      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_4__["logout"])(null));
+    },
+    fetchAllNotes: function fetchAllNotes() {
+      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_3__["fetchAllNotes"])());
+    },
+    // fetchNotes: (userId) => dispatch(fetchNotes(userId)),
+    // fetchUser: (userId) => dispatch(fetchUser(userId)),
+    fetchCurrentUser: function fetchCurrentUser(id) {
+      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_4__["fetchCurrentUser"])(id));
     }
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_note_index__WEBPACK_IMPORTED_MODULE_1__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, mapDispatchToProps)(_note_index__WEBPACK_IMPORTED_MODULE_2__["default"]));
 
 /***/ }),
 
@@ -1934,6 +2098,7 @@ var LoginForm = /*#__PURE__*/function (_React$Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.sessionLink = _this.sessionLink.bind(_assertThisInitialized(_this));
     _this.renderErrors = _this.renderErrors.bind(_assertThisInitialized(_this));
+    _this.handleDemoSubmit = _this.handleDemoSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1973,7 +2138,7 @@ var LoginForm = /*#__PURE__*/function (_React$Component) {
         password: "password"
       };
       this.props.login(demo);
-      this.props.history.push("/u/");
+      this.props.history.push("/home");
       this.props.clearSessionErrors();
     }
   }, {
@@ -2029,6 +2194,15 @@ var LoginForm = /*#__PURE__*/function (_React$Component) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Enter your password")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "modalError"
       }, loginErrors), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "signup-row"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Not your computer? Use in Demo mode to sign in privately.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "signup-row"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "session-link",
+        onClick: function onClick(e) {
+          return _this3.handleDemoSubmit(e);
+        }
+      }, "Continue as Demo User")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "session-footer"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "session-link"
@@ -2074,7 +2248,9 @@ var mapStateToProps = function mapStateToProps(state) {
     formType: 'login',
     loggedIn: Boolean(state.session.currentUser),
     errors: state.errors.session || [],
-    currentUser: state.session.currentUser || {}
+    currentUser: state.session.currentUser || {},
+    users: state.users || {},
+    notes: state.notes || {}
   };
 };
 
@@ -2212,7 +2388,7 @@ var SignupForm = /*#__PURE__*/function (_React$Component) {
         password: "password"
       };
       this.props.login(demo);
-      this.props.history.push("/u/");
+      this.props.history.push("/home");
       this.props.clearSessionErrors();
     }
   }, {
@@ -2301,6 +2477,15 @@ var SignupForm = /*#__PURE__*/function (_React$Component) {
       }, "Use 8 or more characters with a mix of letters, numbers & symbols"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "modalError"
       }, signupErrors, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "signup-row"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Not your computer? Use Demo mode to sign in privately.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "signup-row"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "session-link",
+        onClick: function onClick(e) {
+          return _this3.handleDemoSubmit(e);
+        }
+      }, "Continue as Demo User")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "signup-footer signup-row"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "session-link"
@@ -2436,6 +2621,12 @@ var Splash = /*#__PURE__*/function (_React$Component) {
   }
 
   _createClass(Splash, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.props.fetchAllNotes();
+      this.props.fetchCurrentUser(this.props.currentUser.id);
+    }
+  }, {
     key: "handleDemoSubmit",
     value: function handleDemoSubmit(e) {
       var _this2 = this;
@@ -2446,7 +2637,7 @@ var Splash = /*#__PURE__*/function (_React$Component) {
         password: "password"
       };
       this.props.login(user).then(function () {
-        return _this2.props.history.push("/u/");
+        return _this2.props.history.push("/home");
       });
       this.props.clearSessionErrors();
     }
@@ -2458,7 +2649,7 @@ var Splash = /*#__PURE__*/function (_React$Component) {
       if (!this.props.currentUser) {
         window.location.hash = "/".concat(link);
       } else if (this.props.currentUser) {
-        window.location.hash = "/u/";
+        window.location.hash = "/home";
       }
     }
   }, {
@@ -2527,36 +2718,43 @@ var Splash = /*#__PURE__*/function (_React$Component) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/session_actions */ "./frontend/actions/session_actions.js");
-/* harmony import */ var _splash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./splash */ "./frontend/components/splash/splash.jsx");
- // import { fetchAllNotes } from "../../actions/note_actions";
+/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/note_actions */ "./frontend/actions/note_actions.js");
+/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var _splash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./splash */ "./frontend/components/splash/splash.jsx");
+
 
 
 
 
 var mapStateToProps = function mapStateToProps(state) {
-  var currentUser = state.session.currentUser;
+  // const currentUser = state.session.currentUser;
   return {
-    // notes: Object.values(state.notes),
-    currentUser: currentUser,
-    userId: currentUser ? currentUser.id : null,
-    loggedIn: Boolean(state.session.currentUser)
+    users: state.users || {},
+    notes: Object.values(state.notes),
+    loggedIn: Boolean(state.session.currentUser),
+    currentUser: state.session.currentUser || {} // userId: currentUser ? currentUser.id : null
+
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    // fetchAllNotes: () => dispatch(fetchAllNotes()),
+    fetchAllNotes: function fetchAllNotes() {
+      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["fetchAllNotes"])());
+    },
+    fetchCurrentUser: function fetchCurrentUser(id) {
+      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["fetchCurrentUser"])(id));
+    },
     login: function login(user) {
-      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_1__["login"])(user));
+      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["login"])(user));
     },
     clearSessionErrors: function clearSessionErrors() {
-      return dispatch(_actions_session_actions__WEBPACK_IMPORTED_MODULE_1__["clearSessionErrors"]);
+      return dispatch(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["clearSessionErrors"]);
     }
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_splash__WEBPACK_IMPORTED_MODULE_2__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_splash__WEBPACK_IMPORTED_MODULE_3__["default"]));
 
 /***/ }),
 
@@ -2571,12 +2769,14 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
-/* harmony import */ var _navbar_sidebar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../navbar/sidebar */ "./frontend/components/navbar/sidebar.jsx");
-/* harmony import */ var _notes_note_index_container__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../notes/note_index_container */ "./frontend/components/notes/note_index_container.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
+/* harmony import */ var _navbar_sidebar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../navbar/sidebar */ "./frontend/components/navbar/sidebar.jsx");
+/* harmony import */ var _notes_note_index_container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../notes/note_index_container */ "./frontend/components/notes/note_index_container.js");
+/* harmony import */ var _notes_note_index_item__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../notes/note_index_item */ "./frontend/components/notes/note_index_item.jsx");
+/* harmony import */ var _notes_note_detail_container__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../notes/note_detail_container */ "./frontend/components/notes/note_detail_container.js");
+/* harmony import */ var _notes_note_form_container__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../notes/note_form_container */ "./frontend/components/notes/note_form_container.js");
+/* harmony import */ var _user_show_container__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./user_show_container */ "./frontend/components/user/user_show_container.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2606,6 +2806,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
+
 var UserShow = /*#__PURE__*/function (_React$Component) {
   _inherits(UserShow, _React$Component);
 
@@ -2620,40 +2823,53 @@ var UserShow = /*#__PURE__*/function (_React$Component) {
     _this.state = {
       defaultSidebar: true,
       expandedSidebar: false
-    };
-    _this.navbar = _this.navbar.bind(_assertThisInitialized(_this));
-    _this.sidebar = _this.sidebar.bind(_assertThisInitialized(_this));
+    }; // this.navbar = this.navbar.bind(this);
+    // this.sidebar = this.sidebar.bind(this);
+    // this.noteIndex = this.noteIndex.bind(this);
+
     return _this;
   }
 
   _createClass(UserShow, [{
-    key: "navbar",
-    value: function navbar() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_3__["default"], null));
-    }
-  }, {
-    key: "sidebar",
-    value: function sidebar() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_sidebar__WEBPACK_IMPORTED_MODULE_4__["default"], null));
-    }
-  }, {
-    key: "noteIndex",
-    value: function noteIndex() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_notes_note_index_container__WEBPACK_IMPORTED_MODULE_5__["default"], null);
-    }
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.props.fetchAllNotes(); // this.props.fetchCurrentUser(this.props.currentUser.id);
+    } // navbar() {
+    // 	return (
+    // 		<Fragment>
+    // 			<Navbar />
+    // 		</Fragment>
+    // 	)
+    // }
+    // sidebar() {
+    // 	return (
+    // 		<Fragment>
+    // 			<Sidebar />
+    // 		</Fragment>
+    // 	)
+    // }
+    // noteIndex() {
+    // 	return (
+    // 		<Fragment>
+    // 			<NoteIndexContainer users={this.props.users || {}} notes={this.props.notes || {}} currentUser={this.props.currentUser || {}} />
+    // 		</Fragment>
+    // 	)
+    // }
+
   }, {
     key: "render",
     value: function render() {
-      var navbar = this.navbar();
-      var sidebar = this.sidebar();
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_sidebar__WEBPACK_IMPORTED_MODULE_4__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_notes_note_index_container__WEBPACK_IMPORTED_MODULE_5__["default"], null));
+      // const navBar = (<Navbar />)
+      // const sideBar = (<Sidebar />)
+      // let noteIndex = this.noteIndex();
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_sidebar__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_notes_note_index_container__WEBPACK_IMPORTED_MODULE_4__["default"], null));
     }
   }]);
 
   return UserShow;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["withRouter"])(UserShow));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(UserShow));
 
 /***/ }),
 
@@ -2666,40 +2882,49 @@ var UserShow = /*#__PURE__*/function (_React$Component) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/user_actions */ "./frontend/actions/user_actions.js");
-/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/note_actions */ "./frontend/actions/note_actions.js");
-/* harmony import */ var _user_show__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./user_show */ "./frontend/components/user/user_show.jsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/user_actions */ "./frontend/actions/user_actions.js");
+/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/note_actions */ "./frontend/actions/note_actions.js");
+/* harmony import */ var _util_session_api_util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../util/session_api_util */ "./frontend/util/session_api_util.js");
+/* harmony import */ var _user_show__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./user_show */ "./frontend/components/user/user_show.jsx");
+
+
 
 
 
 
 
 var mapStateToProps = function mapStateToProps(state) {
+  var allNotes = Object.values(state.notes);
+  console.log("state", state);
+  console.log("notes", state.notes);
   return {
-    notes: Object.values(state.notes),
-    // users: state.users,
-    currentUser: state.session.currentUser || {},
-    loggedIn: Boolean(state.session.currentUser)
+    // notes: Object.values(state.notes) || {},
+    notes: state.notes || {},
+    users: state.users || {},
+    loggedIn: Boolean(state.session.currentUser),
+    currentUser: state.session.currentUser || {}
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     fetchAllNotes: function fetchAllNotes() {
-      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_2__["fetchAllNotes"])());
+      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_3__["fetchAllNotes"])());
     },
-    // fetchAllUsers: () => dispatch(fetchAllUsers()),
-    fetchUser: function fetchUser(userId) {
-      return dispatch(Object(_actions_user_actions__WEBPACK_IMPORTED_MODULE_1__["fetchUser"])(userId));
-    },
-    fetchSingleUser: function fetchSingleUser(userId) {
-      return dispatch(Object(_actions_user_actions__WEBPACK_IMPORTED_MODULE_1__["fetchSingleUser"])(userId));
+    // fetchCurrentUser: (id) => dispatch(fetchCurrentUser(id)),
+    // fetchNotes: (filter, value) => dispatch(fetchNotes(filter, value)),
+    // fetchUser: (userId) => dispatch(fetchUser(userId)),
+    // fetchSingleUser: (userId) => dispatch(fetchSingleUser(userId)),
+    logout: function logout() {
+      return dispatch(Object(_util_session_api_util__WEBPACK_IMPORTED_MODULE_4__["logout"])());
     }
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_user_show__WEBPACK_IMPORTED_MODULE_3__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, mapDispatchToProps)(_user_show__WEBPACK_IMPORTED_MODULE_5__["default"]));
 
 /***/ }),
 
@@ -2718,7 +2943,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store/store */ "./frontend/store/store.js");
 /* harmony import */ var _components_root__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/root */ "./frontend/components/root.jsx");
+/* harmony import */ var _util_session_api_util_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./util/session_api_util.js */ "./frontend/util/session_api_util.js");
+/* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./actions/user_actions */ "./frontend/actions/user_actions.js");
+/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./actions/note_actions */ "./frontend/actions/note_actions.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
 
 
 
@@ -2730,7 +2961,9 @@ document.addEventListener('DOMContentLoaded', function () {
   if (window.currentUser) {
     var preloadedState = {
       session: {
-        currentUser: window.currentUser
+        currentUser: window.currentUser,
+        id: window.currentUser.id,
+        email: window.currentUser.email
       },
       users: _defineProperty({}, window.currentUser.id, window.currentUser)
     };
@@ -2738,7 +2971,20 @@ document.addEventListener('DOMContentLoaded', function () {
     delete window.currentUser;
   } else {
     store = Object(_store_store__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  }
+  } // testing start
+
+
+  window.getState = store.getState;
+  window.dispatch = store.dispatch;
+  window.login = _util_session_api_util_js__WEBPACK_IMPORTED_MODULE_4__["login"];
+  window.logout = _util_session_api_util_js__WEBPACK_IMPORTED_MODULE_4__["logout"];
+  window.fetchAllUsers = _actions_user_actions__WEBPACK_IMPORTED_MODULE_5__["fetchAllUsers"];
+  window.fetchNotes = _actions_note_actions__WEBPACK_IMPORTED_MODULE_6__["fetchNotes"];
+  window.fetchAllNotes = _actions_note_actions__WEBPACK_IMPORTED_MODULE_6__["fetchAllNotes"];
+  window.createNote = _actions_note_actions__WEBPACK_IMPORTED_MODULE_6__["createNote"];
+  window.fetchNote = _actions_note_actions__WEBPACK_IMPORTED_MODULE_6__["fetchNote"];
+  window.updateNote = _actions_note_actions__WEBPACK_IMPORTED_MODULE_6__["updateNote"];
+  window.deleteNote = _actions_note_actions__WEBPACK_IMPORTED_MODULE_6__["deleteNote"]; // testing end
 
   var root = document.getElementById("root");
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_root__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -2759,6 +3005,8 @@ document.addEventListener('DOMContentLoaded', function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/session_actions */ "./frontend/actions/session_actions.js");
 /* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../actions/note_actions */ "./frontend/actions/note_actions.js");
+/* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions/user_actions */ "./frontend/actions/user_actions.js");
+
 
 
 
@@ -2787,6 +3035,14 @@ var errorsReducer = function errorsReducer() {
     case _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["RECEIVE_NOTE"]:
       return [];
 
+    case _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__["RECEIVE_USER_ERRORS"]:
+      return {
+        users: action.errors
+      };
+
+    case _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__["RECEIVE_ALL_USERS"]:
+      return [];
+
     default:
       return state;
   }
@@ -2805,224 +3061,113 @@ var errorsReducer = function errorsReducer() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lodash_merge__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js");
-/* harmony import */ var lodash_merge__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_merge__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../actions/note_actions */ "./frontend/actions/note_actions.js");
-/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var lodash_merge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js");
+/* harmony import */ var lodash_merge__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_merge__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions/note_actions */ "./frontend/actions/note_actions.js");
+/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../actions/user_actions */ "./frontend/actions/user_actions.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
-var _initialState = {
-  "1": {
-    id: 1,
-    title: "asdf",
-    body: "jkl;",
-    color: "",
-    pinned: true,
-    created_at: "",
-    updated_at: "",
-    owner: 1
-  },
-  "2": {
-    id: 2,
-    title: "biggy",
-    body: "Fuck all you hoes Get a grip motherfucker. Yeah, this album is dedicated to all the teachers that told me I'd never amount to nothin', to all the people that lived above the buildings that I was hustlin' in front of that called the police on me when I was just tryin' to make some money to feed my daughter, and all the niggas in the struggle, you know what I'm sayin'? Uh-ha, it's all good baby bay-bee, uh It was all a dream I used to read Word Up magazine Salt'n'Pepa and Heavy D up in the limousine Hangin' pictures on my wall Every Saturday Rap Attack, Mr. Magic, Marley Marl I let my tape rock 'til my tape pop Smokin' weed and bamboo, sippin' on private stock Way back, when I had the red and black lumberjack With the hat to match Remember Rappin' Duke, duh-ha, duh-ha You never thought that hip hop would take it this far Now I'm in the limelight 'cause I rhyme tight Time to get paid, blow up like the World Trade Born sinner, the opposite of a winner Remember when I used to eat sardines for dinner Peace to Ron G, Brucey B, Kid Capri Funkmaster Flex, Lovebug Starsky I'm blowin' up like you thought I would Call the crib, same number same hood It's all good Uh, and if you don't know, now you know, nigga, uh You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty I made the change from a common thief To up close and personal with Robin Leach And I'm far from cheap, I smoke skunk with my peeps all day Spread love, it's the Brooklyn way The Moet and Alize keep me pissy Girls used to diss me Now they write letters 'cause they miss me I never thought it could happen, this rappin' stuff I was too used to packin' gats and stuff Now honies play me close like butter played toast From the Mississippi down to the east coast Condos in Queens, indo for weeks Sold out seats to hear Biggie Smalls speak Livin' life without fear Puttin' 5 karats in my baby girl's ear Lunches, brunches, interviews by the pool Considered a fool 'cause I dropped out of high school Stereotypes of a black male misunderstood And it's still all good Uh...and if you don't know, now you know, nigga You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty Super Nintendo, Sega Genesis When I was dead broke, man I couldn't picture this 50 inch screen, money green leather sofa Got two rides, a limousine with a chauffeur Phone bill about two G's flat No need to worry, my accountant handles that And my whole crew is loungin' Celebratin' every day, no more public housin' Thinkin' back on my one-room shack Now my mom pimps a Ac' with minks on her back And she loves to show me off, of course Smiles every time my face is up in The Source We used to fuss when the landlord dissed us No heat, wonder why Christmas missed us Birthdays was the worst days Now we sip champagne when we thirst-ay Uh, damn right I like the life I live 'Cause I went from negative to positive And it's all... It's all good ...and if you don't know, now you know, nigga, uh Uh, uh...and if you don't know, now you know, nigga Uh...and if you don't know, now you know, nigga, uh Representin' B-Town in the house, Junior Mafia, mad flavor, uh Uh, yeah, a-ightll you hoes Get a grip motherfucker. Yeah, this album is dedicated to all the teachers that told me I'd never amount to nothin', to all the people that lived above the buildings that I was hustlin' in front of that called the police on me when I was just tryin' to make some money to feed my daughter, and all the niggas in the struggle, you know what I'm sayin'? Uh-ha, it's all good baby bay-bee, uh It was all a dream I used to read Word Up magazine Salt'n'Pepa and Heavy D up in the limousine Hangin' pictures on my wall Every Saturday Rap Attack, Mr. Magic, Marley Marl I let my tape rock 'til my tape pop Smokin' weed and bamboo, sippin' on private stock Way back, when I had the red and black lumberjack With the hat to match Remember Rappin' Duke, duh-ha, duh-ha You never thought that hip hop would take it this far Now I'm in the limelight 'cause I rhyme tight Time to get paid, blow up like the World Trade Born sinner, the opposite of a winner Remember when I used to eat sardines for dinner Peace to Ron G, Brucey B, Kid Capri Funkmaster Flex, Lovebug Starsky I'm blowin' up like you thought I would Call the crib, same number same hood It's all good Uh, and if you don't know, now you know, nigga, uh You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty I made the change from a common thief To up close and personal with Robin Leach And I'm far from cheap, I smoke skunk with my peeps all day Spread love, it's the Brooklyn way The Moet and Alize keep me pissy Girls used to diss me Now they write letters 'cause they miss me I never thought it could happen, this rappin' stuff I was too used to packin' gats and stuff Now honies play me close like butter played toast From the Mississippi down to the east coast Condos in Queens, indo for weeks Sold out seats to hear Biggie Smalls speak Livin' life without fear Puttin' 5 karats in my baby girl's ear Lunches, brunches, interviews by the pool Considered a fool 'cause I dropped out of high school Stereotypes of a black male misunderstood And it's still all good Uh...and if you don't know, now you know, nigga You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty Super Nintendo, Sega Genesis When I was dead broke, man I couldn't picture this 50 inch screen, money green leather sofa Got two rides, a limousine with a chauffeur Phone bill about two G's flat No need to worry, my accountant handles that And my whole crew is loungin' Celebratin' every day, no more public housin' Thinkin' back on my one-room shack Now my mom pimps a Ac' with minks on her back And she loves to show me off, of course Smiles every time my face is up in The Source We used to fuss when the landlord dissed us No heat, wonder why Christmas missed us Birthdays was the worst days Now we sip champagne when we thirst-ay Uh, damn right I like the life I live 'Cause I went from negative to positive And it's all... It's all good ...and if you don't know, now you know, nigga, uh Uh, uh...and if you don't know, now you know, nigga Uh...and if you don't know, now you know, nigga, uh Representin' B-Town in the house, Junior Mafia, mad flavor, uh Uh, yeah, a-ight",
-    color: "",
-    pinned: false,
-    created_at: "",
-    updated_at: "",
-    owner: 1
-  },
-  "3": {
-    id: 3,
-    title: "wheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    body: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    color: "",
-    pinned: true,
-    created_at: "",
-    updated_at: "",
-    owner: 1
-  },
-  "4": {
-    id: 4,
-    title: "4",
-    body: "test",
-    color: "",
-    pinned: false,
-    created_at: "",
-    updated_at: "",
-    owner: 1
-  },
-  "5": {
-    id: 5,
-    title: "5",
-    body: "whoop thur it is",
-    color: "",
-    pinned: false,
-    created_at: "",
-    updated_at: "",
-    owner: 1
-  },
-  "6": {
-    id: 6,
-    title: "test 6",
-    body: "test",
-    color: "",
-    pinned: false,
-    created_at: "",
-    updated_at: "",
-    owner: 1
-  },
-  "7": {
-    id: 7,
-    title: "#f28b82",
-    body: "#f28b82",
-    color: "#f28b82",
-    pinned: false,
-    created_at: Date("10/10/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "8": {
-    id: 8,
-    title: "#f28b82",
-    body: "#f28b82",
-    color: "#f28b82",
-    pinned: false,
-    created_at: Date("01/19/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "9": {
-    id: 9,
-    title: "#fbbc04",
-    body: "#fbbc04",
-    color: "#fbbc04",
-    pinned: false,
-    created_at: Date("01/19/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "10": {
-    id: 10,
-    title: "#fff475",
-    body: "#fff475",
-    color: "#fff475",
-    pinned: false,
-    created_at: Date("01/19/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "11": {
-    id: 11,
-    title: "#ccff90",
-    body: "#ccff90",
-    color: "#ccff90",
-    pinned: false,
-    created_at: Date("01/19/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "12": {
-    id: 12,
-    title: "#a7ffeb",
-    body: "#a7ffeb",
-    color: "#a7ffeb",
-    pinned: false,
-    created_at: Date("08/04/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "13": {
-    id: 13,
-    title: "#cbf0f8",
-    body: "#cbf0f8",
-    color: "#cbf0f8",
-    pinned: false,
-    created_at: Date("09/10/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "14": {
-    id: 14,
-    title: "#aecbfa",
-    body: "#aecbfa",
-    color: "#aecbfa",
-    pinned: false,
-    created_at: Date("09/10/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "15": {
-    id: 15,
-    title: "#d7aefb",
-    body: "#d7aefb",
-    color: "#d7aefb",
-    pinned: false,
-    created_at: Date("09/10/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "16": {
-    id: 16,
-    title: "#fdcfe8",
-    body: "#fdcfe8",
-    color: "#fdcfe8",
-    pinned: false,
-    created_at: new Date(),
-    updated_at: "",
-    owner: 1
-  },
-  "17": {
-    id: 17,
-    title: "#e6c9a8",
-    body: "#e6c9a8",
-    color: "#e6c9a8",
-    pinned: false,
-    created_at: Date("010/10/2020"),
-    updated_at: "",
-    owner: 1
-  },
-  "18": {
-    id: 18,
-    title: "#e8eaed",
-    body: "#e8eaed",
-    color: "#e8eaed",
-    pinned: false,
-    created_at: Date("010/10/2020"),
-    updated_at: "",
-    owner: 1
-  }
-};
+
+ // const _initialState = {
+// 	"1": {
+//     id: 1,
+//     title: "asdf",
+//     body: "jkl;",
+// 		color: "",
+// 		pinned: true,
+// 		created_at: "",
+// 		updated_at: "",
+// 		owner: 1,
+//   },
+//   "2": {
+//     id: 2,
+//     title: "biggy",
+// 		body: "Fuck all you hoes Get a grip motherfucker. Yeah, this album is dedicated to all the teachers that told me I'd never amount to nothin', to all the people that lived above the buildings that I was hustlin' in front of that called the police on me when I was just tryin' to make some money to feed my daughter, and all the niggas in the struggle, you know what I'm sayin'? Uh-ha, it's all good baby bay-bee, uh It was all a dream I used to read Word Up magazine Salt'n'Pepa and Heavy D up in the limousine Hangin' pictures on my wall Every Saturday Rap Attack, Mr. Magic, Marley Marl I let my tape rock 'til my tape pop Smokin' weed and bamboo, sippin' on private stock Way back, when I had the red and black lumberjack With the hat to match Remember Rappin' Duke, duh-ha, duh-ha You never thought that hip hop would take it this far Now I'm in the limelight 'cause I rhyme tight Time to get paid, blow up like the World Trade Born sinner, the opposite of a winner Remember when I used to eat sardines for dinner Peace to Ron G, Brucey B, Kid Capri Funkmaster Flex, Lovebug Starsky I'm blowin' up like you thought I would Call the crib, same number same hood It's all good Uh, and if you don't know, now you know, nigga, uh You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty I made the change from a common thief To up close and personal with Robin Leach And I'm far from cheap, I smoke skunk with my peeps all day Spread love, it's the Brooklyn way The Moet and Alize keep me pissy Girls used to diss me Now they write letters 'cause they miss me I never thought it could happen, this rappin' stuff I was too used to packin' gats and stuff Now honies play me close like butter played toast From the Mississippi down to the east coast Condos in Queens, indo for weeks Sold out seats to hear Biggie Smalls speak Livin' life without fear Puttin' 5 karats in my baby girl's ear Lunches, brunches, interviews by the pool Considered a fool 'cause I dropped out of high school Stereotypes of a black male misunderstood And it's still all good Uh...and if you don't know, now you know, nigga You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty Super Nintendo, Sega Genesis When I was dead broke, man I couldn't picture this 50 inch screen, money green leather sofa Got two rides, a limousine with a chauffeur Phone bill about two G's flat No need to worry, my accountant handles that And my whole crew is loungin' Celebratin' every day, no more public housin' Thinkin' back on my one-room shack Now my mom pimps a Ac' with minks on her back And she loves to show me off, of course Smiles every time my face is up in The Source We used to fuss when the landlord dissed us No heat, wonder why Christmas missed us Birthdays was the worst days Now we sip champagne when we thirst-ay Uh, damn right I like the life I live 'Cause I went from negative to positive And it's all... It's all good ...and if you don't know, now you know, nigga, uh Uh, uh...and if you don't know, now you know, nigga Uh...and if you don't know, now you know, nigga, uh Representin' B-Town in the house, Junior Mafia, mad flavor, uh Uh, yeah, a-ightll you hoes Get a grip motherfucker. Yeah, this album is dedicated to all the teachers that told me I'd never amount to nothin', to all the people that lived above the buildings that I was hustlin' in front of that called the police on me when I was just tryin' to make some money to feed my daughter, and all the niggas in the struggle, you know what I'm sayin'? Uh-ha, it's all good baby bay-bee, uh It was all a dream I used to read Word Up magazine Salt'n'Pepa and Heavy D up in the limousine Hangin' pictures on my wall Every Saturday Rap Attack, Mr. Magic, Marley Marl I let my tape rock 'til my tape pop Smokin' weed and bamboo, sippin' on private stock Way back, when I had the red and black lumberjack With the hat to match Remember Rappin' Duke, duh-ha, duh-ha You never thought that hip hop would take it this far Now I'm in the limelight 'cause I rhyme tight Time to get paid, blow up like the World Trade Born sinner, the opposite of a winner Remember when I used to eat sardines for dinner Peace to Ron G, Brucey B, Kid Capri Funkmaster Flex, Lovebug Starsky I'm blowin' up like you thought I would Call the crib, same number same hood It's all good Uh, and if you don't know, now you know, nigga, uh You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty I made the change from a common thief To up close and personal with Robin Leach And I'm far from cheap, I smoke skunk with my peeps all day Spread love, it's the Brooklyn way The Moet and Alize keep me pissy Girls used to diss me Now they write letters 'cause they miss me I never thought it could happen, this rappin' stuff I was too used to packin' gats and stuff Now honies play me close like butter played toast From the Mississippi down to the east coast Condos in Queens, indo for weeks Sold out seats to hear Biggie Smalls speak Livin' life without fear Puttin' 5 karats in my baby girl's ear Lunches, brunches, interviews by the pool Considered a fool 'cause I dropped out of high school Stereotypes of a black male misunderstood And it's still all good Uh...and if you don't know, now you know, nigga You know very well who you are Don't let em hold you down, reach for the stars You had a goal, but not that many 'cause you're the only one I'll give you good and plenty Super Nintendo, Sega Genesis When I was dead broke, man I couldn't picture this 50 inch screen, money green leather sofa Got two rides, a limousine with a chauffeur Phone bill about two G's flat No need to worry, my accountant handles that And my whole crew is loungin' Celebratin' every day, no more public housin' Thinkin' back on my one-room shack Now my mom pimps a Ac' with minks on her back And she loves to show me off, of course Smiles every time my face is up in The Source We used to fuss when the landlord dissed us No heat, wonder why Christmas missed us Birthdays was the worst days Now we sip champagne when we thirst-ay Uh, damn right I like the life I live 'Cause I went from negative to positive And it's all... It's all good ...and if you don't know, now you know, nigga, uh Uh, uh...and if you don't know, now you know, nigga Uh...and if you don't know, now you know, nigga, uh Representin' B-Town in the house, Junior Mafia, mad flavor, uh Uh, yeah, a-ight",
+// 		color: "",
+// 		pinned: false,
+// 		created_at: "",
+// 		updated_at: "",
+// 		owner: 1,
+// 	},
+// 	"3": {
+// 		id: 3,
+// 		title: "wheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+// 		body: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+// 		color: "",
+// 		pinned: true,
+// 		created_at: "",
+// 		updated_at: "",
+// 		owner: 1,
+// 	},
+// 	"4": { id: 4, title: "4", body: "test", color: "", pinned: false, created_at: "", updated_at: "", owner: 1,
+// 	},
+// 	"5": { id: 5, title: "5", body: "whoop thur it is", color: "", pinned: false, created_at: "", updated_at: "", owner: 1,
+// 	},
+// 	"6": { id: 6, title: "test 6", body: "test", color: "", pinned: false, created_at: "", updated_at: "", owner: 1,
+// 	},
+// 	"7": {
+// 		id: 7, title: "#f28b82", body: "#f28b82", color: "#f28b82", pinned: false, created_at: Date("10/10/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"8": {
+// 		id: 8, title: "#f28b82", body: "#f28b82", color: "#f28b82", pinned: false, created_at: Date("01/19/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"9": {
+// 		id: 9, title: "#fbbc04", body: "#fbbc04", color: "#fbbc04", pinned: false, created_at: Date("01/19/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"10": {
+// 		id: 10, title: "#fff475", body: "#fff475", color: "#fff475", pinned: false, created_at: Date("01/19/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"11": {
+// 		id: 11, title: "#ccff90", body: "#ccff90", color: "#ccff90", pinned: false, created_at: Date("01/19/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"12": {
+// 		id: 12, title: "#a7ffeb", body: "#a7ffeb", color: "#a7ffeb", pinned: false, created_at: Date("08/04/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"13": {
+// 		id: 13, title: "#cbf0f8", body: "#cbf0f8", color: "#cbf0f8", pinned: false, created_at: Date("09/10/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"14": {
+// 		id: 14, title: "#aecbfa", body: "#aecbfa", color: "#aecbfa", pinned: false, created_at: Date("09/10/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"15": {
+// 		id: 15, title: "#d7aefb", body: "#d7aefb", color: "#d7aefb", pinned: false, created_at: Date("09/10/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"16": {
+// 		id: 16, title: "#fdcfe8", body: "#fdcfe8", color: "#fdcfe8", pinned: false, created_at: new Date(), updated_at: "", owner: 1,
+// 	},
+// 	"17": {
+// 		id: 17, title: "#e6c9a8", body: "#e6c9a8", color: "#e6c9a8", pinned: false, created_at: Date("010/10/2020"), updated_at: "", owner: 1,
+// 	},
+// 	"18": {
+// 		id: 18, title: "#e8eaed", body: "#e8eaed", color: "#e8eaed", pinned: false, created_at: Date("010/10/2020"), updated_at: "", owner: 1,
+// 	},
+// }
 
 var notesReducer = function notesReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _initialState;
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var action = arguments.length > 1 ? arguments[1] : undefined;
-  Object.freeze(state);
+  Object.freeze(state); // let newState = _.merge({}, state);
+  // let newState = Object.assign({}, state);
 
   switch (action.type) {
-    case _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["RECEIVE_ALL_NOTES"]:
-      var notes = {};
-      action.notes.forEach(function (note) {
-        notes[note.id] = note;
-      });
-      return notes;
-    // return action.notes;
+    case _actions_note_actions__WEBPACK_IMPORTED_MODULE_2__["RECEIVE_NOTE"]:
+      return lodash_merge__WEBPACK_IMPORTED_MODULE_1___default()({}, state, _defineProperty({}, action.note.id, action.note));
 
-    case _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["RECEIVE_NOTE"]:
-      return Object.assign({}, state, _defineProperty({}, action.note.id, action.note));
+    case _actions_note_actions__WEBPACK_IMPORTED_MODULE_2__["RECEIVE_ALL_NOTES"]:
+      return action.notes;
 
-    case _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["REMOVE_NOTE"]:
-      var nextState = Object.assign({}, state);
-      delete nextState[action.note.id];
-      return nextState;
+    case _actions_note_actions__WEBPACK_IMPORTED_MODULE_2__["REMOVE_NOTE"]:
+      var newState = lodash_merge__WEBPACK_IMPORTED_MODULE_1___default()({}, state);
+      delete newState[action.noteId];
+      return newState;
 
-    case _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__["NOTE_ERROR"]:
-      alert(action.error);
-
-    case _actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["LOGOUT_CURRENT_USER"]:
+    case _actions_session_actions__WEBPACK_IMPORTED_MODULE_3__["LOGOUT_CURRENT_USER"]:
       return {};
 
     default:
@@ -3073,6 +3218,8 @@ var rootReducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])(
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../actions/note_actions */ "./frontend/actions/note_actions.js");
+
 
 var _nullUser = {
   currentUser: null
@@ -3089,6 +3236,15 @@ var sessionReducer = function sessionReducer() {
       // newState = merge({}, state);
       newState.currentUser = action.currentUser;
       return newState;
+    // return { currentUser: action.currentUser };
+    // case RECEIVE_ALL_NOTES: 
+    // 	return action.currentUser.notes;
+    // case RECEIVE_NOTES:
+    // 	if (action.currentUser.notes === undefined) {
+    // 		return {};
+    // 	} else {
+    // 		return Object.assign({}, action.notes);
+    // 	};
 
     case _actions_session_actions__WEBPACK_IMPORTED_MODULE_0__["LOGOUT_CURRENT_USER"]:
       return _nullUser;
@@ -3116,25 +3272,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_merge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js");
 /* harmony import */ var lodash_merge__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_merge__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions/user_actions */ "./frontend/actions/user_actions.js");
+/* harmony import */ var _actions_note_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../actions/note_actions */ "./frontend/actions/note_actions.js");
+/* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../actions/session_actions */ "./frontend/actions/session_actions.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 
+
+var _initialState = {
+  "0": {
+    id: 0,
+    owner_id: 0,
+    email: "donotdelete@please.com",
+    password: "password",
+    notes: {}
+  }
+};
+
 var usersReducer = function usersReducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var action = arguments.length > 1 ? arguments[1] : undefined;
-  Object.freeze(state);
-  var newState = Object.assign({}, state);
+  Object.freeze(state); // let newState = Object.assign({}, state);
+
+  var newState = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.merge({}, state);
 
   switch (action.type) {
-    case _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__["RECEIVE_USER"]:
-      // newState.id = action.user.id;
-      return Object.assign({}, state, _defineProperty({}, action.user.id, action.user));
+    case _actions_session_actions__WEBPACK_IMPORTED_MODULE_4__["RECEIVE_CURRENT_USER"]:
+      return lodash_merge__WEBPACK_IMPORTED_MODULE_1___default()({}, state, _defineProperty({}, action.currentUser.id, action.currentUser)); // newState.id = action.user.id;
+      // return Object.assign({}, state, { [action.user.id]: action.user });
+      // newState.user = action.user;
+
+      return newState;
 
     case _actions_user_actions__WEBPACK_IMPORTED_MODULE_2__["RECEIVE_ALL_USERS"]:
-      return Object.assign({}, state, action.users);
+      return lodash_merge__WEBPACK_IMPORTED_MODULE_1___default()({}, state, action.users);
+    // return Object.assign({}, state, action.users);
+    // case RECEIVE_USER:
+    // 	if (action.user.notes === undefined) {
+    // 		return {};
+    // 	} else {
+    // 		return Object.assign({}, state, {[notes]: action.notes});
+    // 	};
 
     default:
       return state;
@@ -3179,8 +3359,8 @@ if (true) {
 var configureStore = function configureStore() {
   var preloadedState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   return Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(_reducers_root_reducer__WEBPACK_IMPORTED_MODULE_4__["default"], preloadedState, // applyMiddleware(thunk, logger),
-  Object(redux_devtools_extension__WEBPACK_IMPORTED_MODULE_1__["composeWithDevTools"])( // applyMiddleware(thunk, logger)
-  redux__WEBPACK_IMPORTED_MODULE_0__["applyMiddleware"].apply(void 0, middlewares)));
+  Object(redux_devtools_extension__WEBPACK_IMPORTED_MODULE_1__["composeWithDevTools"])(Object(redux__WEBPACK_IMPORTED_MODULE_0__["applyMiddleware"])(redux_thunk__WEBPACK_IMPORTED_MODULE_2__["default"], redux_logger__WEBPACK_IMPORTED_MODULE_3___default.a) // applyMiddleware(...middlewares)
+  ));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (configureStore);
@@ -3191,16 +3371,19 @@ var configureStore = function configureStore() {
 /*!****************************************!*\
   !*** ./frontend/util/note_api_util.js ***!
   \****************************************/
-/*! exports provided: fetchAllNotes, fetchNote, createNote, updateNote, deleteNote */
+/*! exports provided: fetchAllNotes, fetchNotes, fetchNote, createNote, updateNote, deleteNote */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchAllNotes", function() { return fetchAllNotes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchNotes", function() { return fetchNotes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchNote", function() { return fetchNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNote", function() { return createNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateNote", function() { return updateNote; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteNote", function() { return deleteNote; });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var fetchAllNotes = function fetchAllNotes() {
   return $.ajax({
     method: 'GET',
@@ -3208,27 +3391,32 @@ var fetchAllNotes = function fetchAllNotes() {
     dataType: 'json'
   });
 };
+var fetchNotes = function fetchNotes(filter, value) {
+  return $.ajax({
+    method: 'GET',
+    url: '/api/notes',
+    data: _defineProperty({}, filter, value)
+  });
+};
 var fetchNote = function fetchNote(noteId) {
   return $.ajax({
     method: 'GET',
-    url: "/api/notes/".concat(noteId),
-    dataType: 'json'
+    url: "/api/notes/".concat(noteId)
   });
 };
-var createNote = function createNote(note) {
+var createNote = function createNote(note, userId) {
   return $.ajax({
     method: 'POST',
     url: '/api/notes',
     processData: false,
     contentType: false,
-    dataType: 'json',
     data: note
   });
 };
-var updateNote = function updateNote(noteId) {
+var updateNote = function updateNote(note) {
   return $.ajax({
     method: 'PATCH',
-    url: "api/notes/".concat(noteId),
+    url: "/api/notes/".concat(note.id),
     processData: false,
     contentType: false,
     dataType: 'json',
@@ -3278,7 +3466,7 @@ var Auth = function Auth(_ref) {
     render: function render(props) {
       return !loggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, props) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Redirect"], {
         exact: true,
-        to: "/u/"
+        to: "/home"
       });
     }
   });
@@ -3303,7 +3491,8 @@ var Protected = function Protected(_ref2) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    loggedIn: Boolean(state.session.currentUser)
+    loggedIn: Boolean(state.session.currentUser) // userId: currentUser.id || {}
+
   };
 };
 
@@ -3365,18 +3554,18 @@ var fetchCurrentUser = function fetchCurrentUser(currentUserId) {
 /*!****************************************!*\
   !*** ./frontend/util/user_api_util.js ***!
   \****************************************/
-/*! exports provided: fetchAllUsers, fetchUser */
+/*! exports provided: fetchAllUsers, fetchUser, updateUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchAllUsers", function() { return fetchAllUsers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUser", function() { return fetchUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateUser", function() { return updateUser; });
 var fetchAllUsers = function fetchAllUsers() {
   return $.ajax({
     method: 'GET',
-    url: '/api/users',
-    dataType: 'json'
+    url: '/api/users'
   });
 };
 var fetchUser = function fetchUser(userId) {
@@ -3384,6 +3573,16 @@ var fetchUser = function fetchUser(userId) {
     method: 'GET',
     url: "/api/users/".concat(userId),
     dataType: 'json'
+  });
+};
+var updateUser = function updateUser(userId, user) {
+  return $.ajax({
+    method: 'PATCH',
+    url: "/api/users/".concat(userId),
+    contentType: false,
+    processData: false,
+    dataType: json,
+    data: user
   });
 };
 

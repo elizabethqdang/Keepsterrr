@@ -18,8 +18,8 @@ const configureStore = (preloadedState = {}) =>
 		preloadedState,
 		// applyMiddleware(thunk, logger),
 		composeWithDevTools(
-			// applyMiddleware(thunk, logger)
-			applyMiddleware(...middlewares)
+			applyMiddleware(thunk, logger)
+			// applyMiddleware(...middlewares)
 		)
 	);
 

@@ -58,6 +58,7 @@ nav#nav-btns-container {
   top: 0;
   line-height: 1.5;
 	display: inline-flex;
+	position: fixed;
 	width: 100%;
   /* width: 1240px; */
   justify-content: space-evenly;
@@ -70,7 +71,8 @@ nav#nav-btns-container {
 }
 
 .nav-left {
-  display: flex;
+	display: flex;
+	position: relative;
 	/* height: 100%; */
 	/* width: 100%; */
   /* flex-flow: row nowrap; */
@@ -177,7 +179,8 @@ nav#nav-btns-container {
   width: 100%;
   min-width: 46px;
   flex: 1.5;
-  flex-basis: 1;
+	flex-basis: 1;
+	position: relative;
 }
 
 .nav-search {
@@ -240,7 +243,8 @@ i {
 	justify-content: flex-end;
   /* border-right: 1px solid #111; */
   color: #ccc;
-  flex: 1;
+	flex: 1;
+	position: relative;
 }
 
 .nav-upload {
@@ -408,6 +412,7 @@ li.dropdown {
   background-position: 50% 50%;
 	background-repeat: no-repeat;
 	padding: 6px 10px;
+	margin-left: 0;
 }
 
 .nav-notifications:hover,
