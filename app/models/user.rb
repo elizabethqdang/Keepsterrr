@@ -11,16 +11,16 @@
 #
 class User < ApplicationRecord
 	attr_reader	:password
+	after_initialize :ensure_session_token
 	
 	validates	:email, :password_digest, :session_token, presence: true
 	validates	:email, :session_token, uniqueness: true
 	validates :password, length: { allow_nil: true, minimum: 6 }
-	
-	before_validation	:ensure_session_token
+
 
 	has_many :notes,
 		foreign_key: :owner_id,
-		class_name: :Note,
+		class_name: :'Note',
 		dependent: :destroy
 		
 	has_many :pinned_notes,
