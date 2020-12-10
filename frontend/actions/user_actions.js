@@ -5,9 +5,10 @@ export const RECEIVE_SINGLE_USER = "RECEIVE_SINGLE_USER";
 export const RECEIVE_ALL_USERS = "RECEIVE_ALL_USERS";
 export const RECEIVE_USER_ERRORS = "RECEIVE_USER_ERRORS";
 
-const receiveUser = user => ({
+const receiveUser = payload => ({
 	type: RECEIVE_USER,
-	user
+	user: payload.user || {},
+	notes: payload.notes || {}
 });
 
 const receiveSingleUser = user => ({
@@ -29,9 +30,9 @@ const receiveAllUsers = users => ({
 
 export const fetchUser = userId => dispatch => {
 	return UserAPIUtil.fetchUser(userId).then(
-		user => {
-			dispatch(receiveUser(user));
-			return user;
+		payload => {
+			dispatch(receiveUser(payload));
+			return payload;
 		},
 		errors => {
 			dispatch(receiveUserErrors(errors.responseJSON));
@@ -42,15 +43,12 @@ export const fetchUser = userId => dispatch => {
 };
 
 export const fetchSingleUser = userId => dispatch => {
-	return UserAPIUtil.fetchUser(userId).then(
-		user => {
-			dispatch(receiveSingleUser(user));
-			return user;
-		},
-		errors => {
-			dispatch(receiveUserErrors(errors.responseJSON));
-			return errors;
-		});
+	UserAPIUtil.fetchUser(userId).then(
+		user =>
+			dispatch(receiveSingleUser(user)),
+		errors =>
+			dispatch(receiveUserErrors(errors.responseJSON))
+		);
 };
 
 export const fetchAllUsers = () => dispatch => {
