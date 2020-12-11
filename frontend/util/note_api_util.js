@@ -6,29 +6,35 @@ export const fetchAllNotes = () => (
 	})
 );
 
+export const fetchNotes = (filter, value) => {
+	return $.ajax({
+		method: 'GET',
+		url: '/api/notes',
+		data: { [filter]: value }
+	});
+};
+
 export const fetchNote = (noteId) => (
 	$.ajax({
 		method: 'GET',
 		url: `/api/notes/${noteId}`,
-		dataType: 'json'
 	})
 );
 
-export const createNote = (note) => (
+export const createNote = (note, userId) => (
 	$.ajax({
 		method: 'POST',
 		url: '/api/notes',
 		processData: false,
 		contentType: false,
-		dataType: 'json',
 		data: note
 	})
 );
 
-export const updateNote = (noteId) => (
+export const updateNote = (note) => (
 	$.ajax({
 		method: 'PATCH',
-		url: `api/notes/${noteId}`,
+		url: `/api/notes/${note.id}`,
 		processData: false,
 		contentType: false,
 		dataType: 'json',
