@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect, Link, HashRouter } from "react-router-dom";
 import { AuthRoute, ProtectedRoute } from "../util/route_util";
 
 import LoginForm from './sessions/login_form_container';
@@ -17,14 +17,15 @@ import UserShowContainer from './user/user_show_container';
 const App = () => (
 	<div id="app" className="app">
 		<Switch>
-			<AuthRoute exact path="/" component={SplashContainer} />
+			<AuthRoute exact path="/" component={SignupForm} />
 			<AuthRoute exact path="/signup" component={SignupForm} />
 			<AuthRoute exact path="/login" component={LoginForm} />
 		</Switch>
 		
-			<ProtectedRoute path="/u/" component={UserShowContainer} />
-			<ProtectedRoute exact path="/u/:userId" component={NoteIndexContainer} />
-			<ProtectedRoute exact path="/u/:userId/#NOTE/:noteId" component={NoteUpdateContainer} />
+			<ProtectedRoute path="/" component={UserShowContainer} />
+			<ProtectedRoute path="/notes" component={NoteIndexContainer} />
+			<ProtectedRoute path="/notes/:noteId" component={NoteItemShow} />
+			<ProtectedRoute path="/notes/:noteId" component={NoteUpdateContainer} />
 			{/* <ProtectedRoute exact path="/u/:userId/#LIST/:noteId" component={} /> */}
 			{/* <ProtectedRoute path="/u/:userId/#search" component={} /> */}
 	</div>

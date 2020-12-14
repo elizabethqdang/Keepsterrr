@@ -1,20 +1,22 @@
 import { connect } from "react-redux";
-// import { fetchAllNotes } from "../../actions/note_actions";
-	import { clearSessionErrors, login } from "../../actions/session_actions";
+import { fetchAllNotes } from "../../actions/note_actions";
+	import { clearSessionErrors, login, fetchCurrentUser } from "../../actions/session_actions";
 import Splash from "./splash";
 
 const mapStateToProps = (state) => {
-	let currentUser = state.session.currentUser;
+	// const currentUser = state.session.currentUser;
 	return {
-		// notes: Object.values(state.notes),
-		currentUser: currentUser,
-		userId: currentUser ? currentUser.id : null,
+		users: state.users || {},
+		notes: Object.values(state.notes),
 		loggedIn: Boolean(state.session.currentUser),
+		currentUser: state.session.currentUser || {},
+		// userId: currentUser ? currentUser.id : null
 	};
 };
 
 const mapDispatchToProps = dispatch => ({
-	// fetchAllNotes: () => dispatch(fetchAllNotes()),
+	fetchAllNotes: () => dispatch(fetchAllNotes()),
+	fetchCurrentUser: (id) => dispatch(fetchCurrentUser(id)),
 	login: (user) => dispatch(login(user)),
 	clearSessionErrors: () => dispatch(clearSessionErrors)
 });

@@ -12,12 +12,17 @@ class Splash extends React.Component {
 		this.handleDemoSubmit = this.handleDemoSubmit.bind(this);
 	}
 	
+	componentDidMount() {
+		this.props.fetchAllNotes();
+		this.props.fetchCurrentUser(this.props.currentUser.id);
+	}
+	
 	handleDemoSubmit(e){
 		e.preventDefault();
 		
     const user = { email: "demo-user@keepsterrr.com", password: "password" };
 		this.props.login(user).then(
-			() => this.props.history.push("/u/")
+			() => this.props.history.push("/home")
 		);
 		this.props.clearSessionErrors();
 	}
@@ -28,7 +33,7 @@ class Splash extends React.Component {
 		if (!this.props.currentUser) {
 			window.location.hash = `/${link}`;
 		} else if (this.props.currentUser) {
-			window.location.hash = "/u/";
+			window.location.hash = "/home";
 		}
 	}
 	

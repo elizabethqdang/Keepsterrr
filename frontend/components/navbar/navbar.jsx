@@ -68,7 +68,7 @@ class Navbar extends React.Component {
 		)
 	}
 
-	navUserLinks(currentUser, logout) {
+	navUserLinks() {
 		return (
 			<Fragment>
 				<button className="nav-refresh" activeClassName="nav-selected" exact to="/home">
@@ -80,7 +80,7 @@ class Navbar extends React.Component {
 					<li className="dropdown">
 						<div className="nav-user-button dropbtn">
 							<div className="nav-user-username truncate dropbtn">
-								{currentUser ? currentUser.email : "Hello"}
+								{this.props.currentUser ? this.props.currentUser.email : "Hello"}
 							</div>
 							<div className="nav-user-image dropbtn">
 								{/* <span><img src={currentUser.profileImgUrl || ""} /></span> */}
@@ -109,7 +109,7 @@ class Navbar extends React.Component {
 		const { currentUser, logout } = this.props;
 		let navLeft = this.navLeft();
 		let navSearch = this.navSearch();
-		let navRight = this.navUserLinks(currentUser, logout);
+		let navRight = this.navUserLinks();
 
 		return (
 			<Fragment>

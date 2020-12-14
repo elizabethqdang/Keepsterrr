@@ -6,7 +6,8 @@ import Navbar from "./navbar";
 const mapStateToProps = (state) => ({
 	loggedIn: Boolean(state.session.currentUser),
 	currentUser: state.session.currentUser || {},
-	users: state.users,
+	users: state.users || {},
+	notes: state.notes || {}
 });
 
 const mapDispatchToProps = dispatch => ({
