@@ -1,20 +1,30 @@
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { fetchUser, fetchSingleUser } from '../../actions/user_actions';
-import { fetchAllNotes } from '../../actions/note_actions';
+import { fetchUser, fetchUsers, fetchAllUsers, fetchSingleUser } from '../../actions/user_actions';
+import { fetchAllNotes, fetchNotes, allNotes } from '../../actions/note_actions';
+import { fetchCurrentUser, logout } from '../../util/session_api_util';
 import UserShow from './user_show';
 
-const mapStateToProps = (state) => ({
-	notes: Object.values(state.notes),
-	// users: state.users,
-	currentUser: state.session.currentUser || {},
-	loggedIn: Boolean(state.session.currentUser)
-});
+const mapStateToProps = (state) => {
+	const allNotes = Object.values(state.notes);
+	console.log("state", state);
+	console.log("notes", state.notes);
+	return {
+		// notes: Object.values(state.notes) || {},
+		notes: state.notes || {},
+		users: state.users || {},
+		loggedIn: Boolean(state.session.currentUser),
+		currentUser: state.session.currentUser || {}
+	}
+};
 
 const mapDispatchToProps = dispatch => ({
 	fetchAllNotes: () => dispatch(fetchAllNotes()),
-	// fetchAllUsers: () => dispatch(fetchAllUsers()),
-	fetchUser: (userId) => dispatch(fetchUser(userId)),
-	fetchSingleUser: (userId) => dispatch(fetchSingleUser(userId)),
+	// fetchCurrentUser: (id) => dispatch(fetchCurrentUser(id)),
+	// fetchNotes: (filter, value) => dispatch(fetchNotes(filter, value)),
+	// fetchUser: (userId) => dispatch(fetchUser(userId)),
+	// fetchSingleUser: (userId) => dispatch(fetchSingleUser(userId)),
+	logout: () => dispatch(logout()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserShow);
