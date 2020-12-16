@@ -4,15 +4,22 @@ import { withRouter } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 // Components
 import NoteIndexItem from './note_index_item';
-import NoteForm from './note_form';
+import NoteFormContainer from './note_form_container';
 
 class NoteIndex extends React.Component {
 	constructor(props) {
 		super(props);
 	}
+	
+	componentDidMount() {
+		this.props.fetchAllNotes();
+		this.props.fetchCurrentUser(this.props.currentUser.id);
+	}
 
 	render() {
-		const { notes } = this.props;
+		const notes = this.props.notes;
+		console.log(this.props.notes);
+		
 		const breakpointColumnsObj = {
 			default: 4,
 			1100: 3,
@@ -20,18 +27,20 @@ class NoteIndex extends React.Component {
 			500: 1
 		};
 		const randomHeight = Math.random() * (550 - 100) + 100;
-		console.log(randomHeight);
+		// console.log(randomHeight);
 		const noteItems = (
 			<Masonry className="notesIndexIndividualWrapper masonry-grid"
 				breakpointCols={breakpointColumnsObj}
 				columnClassName="masonry-grid-column"
 				>
-				{notes.map(note => 
+				{this.props.notes.map(note => 
 					<ul className="todo-list">
 						<NoteIndexItem
 							key={note.id}
 							// key={`note-list-item${note.id}`}
 							note={note}
+							notes={this.props.notes} 
+							users={this.props.users}
 							receiveNote={this.props.receiveNote}
 							removeNote={this.props.removeNote}
 							// style={{height:}}
@@ -44,7 +53,8 @@ class NoteIndex extends React.Component {
 
 		return (
 			<div className="notesIndexWrapper">
-				<NoteForm receiveNote={this.props.receiveNote} />
+				<NoteFormContainer notes={this.props.notes} users={this.props.users} createNote={this.props.createNote} currentUser={this.props.currentUser} fetchAllNotes={this.props.fetchAllNotes} fetchNote={this.props.fetchNote} fetchUser={this.props.fetchUser} fetchCurrentUser={this.props.fetchCurrentUser} />
+				
 				{noteItems}
 			</div>
 		);

@@ -5,16 +5,19 @@ class NoteForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			userId: this.props.currentUser.id,
 			title: "",
 			body: "",
 			color: "#fffff",
-			image: null,
+			imageFile: null,
+			imageUrl: null,
+			list: false,
 			pinned: false,
 			created_at: "",
 			updated_at: "",
-			owner: this.props.currentUser,
+			ownerId: this.props.currentUser.id,
 			defaultForm: true,
-			clicked: false,
+			clicked: false
 		};
 		this.handleClickOnDefaultForm = this.handleClickOnDefaultForm.bind(this);
 		this.toggleClicked = this.toggleClicked.bind(this);
@@ -26,8 +29,38 @@ class NoteForm extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.update = this.update.bind(this);
 		this.submitForm = this.submitForm.bind(this);
+		this.handleImage = this.handleImage.bind(this);
 	}
 
+	handleImage(e) {
+		const reader = new FileReader();
+		const file = e.currentTarget.files[0];
+		reader.onloadend = () => 
+			this.setState({ imageUrl: reader.result, imageFile: file });
+		
+		if (file) {
+			reader.readAsDataURL(file);
+		} else {
+			this.setState({ imageUrl: "", imageFule: null })
+		}
+	}
+	
+	handleImageSubmit(e) {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.apeend()
+		if (this.state.imageFile) {
+			formData.append('note[image]', this.state.imageFile)
+		}
+		$.ajax({
+			url: '/api/notes',
+			method: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		});
+	}
+	
 	handleClickOnDefaultForm(e) {
 		e.stopPropagation();
 		// const defaultClassName =(element) => {
@@ -93,21 +126,36 @@ class NoteForm extends React.Component {
 	}
 
 	submitForm() {
-		if ((this.state.title !== "") || (this.state.body !== "")) {
-			this.props.receiveNote({
-				// id: this.props.currentUser,
-				title: this.state.title,
-				body: this.state.body,
-				created_at: Date (new Date().getTime()),
-				updated_at: "",
-				pinned: this.state.pinned,
-				color: this.state.color,
-				image: null,
-				owner: this.props.currentUser
-			});
+    // e.preventDefault();
+		
+		const formData = new FormData();
+			formData.append('note[title]', this.state.title);
+			formData.append('note[body]', this.state.body);
+			formData.append('note[owner_id]', this.state.ownerId);
+			formData.append('note[title]', this.state.title);
+			formData.append('note[pinned]', this.state.pinned);
+			formData.append('note[list]', this.state.list);
+			formData.append('note[color]', this.state.color);
+			
+		if (this.state.imageFile) {
+			formData.append('note[image]', this.state.imageFile);
 		}
+		if ((this.state.title !== "") || (this.state.body !== "")) {
+			this.props.createNote(formData, this.state.userId);
+		};
+	
+			// this.props.receiveNote({
+			// 	title: this.state.title,
+			// 	body: this.state.body,
+			// 	created_at: Date (new Date().getTime()),
+			// 	pinned: this.state.pinned,
+			// 	color: this.state.color,
+			// 	image: null,
+			// 	owner: this.props.currentUser
+			// });
+		
 		this.toggleForm();
-		this.setState({ title: "", body: "", pinned: "false", created_at: "", updated: "", color: "white", image: "null", owner: "",  });
+		this.setState({ title: "", body: "", pinned: "false", list: "false", created_at: "", updated: "", color: "white", imageUrl: "null", imageFile: "null", ownerId: "" });
 	}
 
 	handleSubmit(e) {
