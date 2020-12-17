@@ -49,7 +49,7 @@ class SignupForm extends React.Component {
 		
     const demo = { email: "demo-user@keepsterrr.com", password: "password" };
 		this.props.login(demo);
-		this.props.history.push("/u/");
+		this.props.history.push("/home");
 		this.props.clearSessionErrors();
 	}
 	
@@ -139,6 +139,13 @@ class SignupForm extends React.Component {
 					<p className="signup-text">Use 8 or more characters with a mix of letters, numbers & symbols</p>
 					
 					<div className="modalError">{signupErrors} </div>
+					
+					<div className="signup-row">
+						<p>Not your computer? Use Demo mode to sign in privately.</p>
+					</div>
+					<div className="signup-row">
+						<p className="session-link" onClick={(e) => this.handleDemoSubmit(e)}>Continue as Demo User</p>
+					</div>
 					
 					<div className="signup-footer signup-row">
 						<p className="session-link"><Link to="/login" onClick={(e) => this.sessionLink(e)}>Sign in instead</Link></p>

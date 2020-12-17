@@ -11,6 +11,7 @@ class LoginForm extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.sessionLink = this.sessionLink.bind(this);
 		this.renderErrors = this.renderErrors.bind(this);
+		this.handleDemoSubmit = this.handleDemoSubmit.bind(this);
 	}
 	
 	update(field) {
@@ -38,7 +39,7 @@ class LoginForm extends React.Component {
 		
     const demo = { email: "demo-user@keepsterrr.com", password: "password" };
 		this.props.login(demo);
-		this.props.history.push("/u/");
+		this.props.history.push("/home");
 		this.props.clearSessionErrors();
 	}
 	
@@ -89,6 +90,13 @@ class LoginForm extends React.Component {
 					</div>
 					
 					<div className="modalError">{loginErrors}</div>
+					
+					<div className="signup-row">
+						<p>Not your computer? Use in Demo mode to sign in privately.</p>
+					</div>
+					<div className="signup-row">
+						<p className="session-link" onClick={(e) => this.handleDemoSubmit(e)}>Continue as Demo User</p>
+					</div>
 					
 					<div className="session-footer">
 						<p className="session-link"><Link to="/signup" onClick={(e) => this.sessionLink(e)}className="create-account-link">Create account</Link></p>

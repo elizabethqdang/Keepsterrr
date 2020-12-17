@@ -7,7 +7,9 @@ const mapStateToProps = (state) => {
 		formType: 'login',
 		loggedIn: Boolean(state.session.currentUser),
 		errors: state.errors.session || [],
-		currentUser: state.session.currentUser || {}
+		currentUser: state.session.currentUser || {},
+		users: state.users || {},
+		notes: state.notes || {}
 	};
 };
 
