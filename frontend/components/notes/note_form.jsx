@@ -30,7 +30,18 @@ class NoteForm extends React.Component {
 		this.update = this.update.bind(this);
 		this.submitForm = this.submitForm.bind(this);
 		this.handleImage = this.handleImage.bind(this);
+		this.togglePinnedNote = this.togglePinnedNote.bind(this);
 	}
+	
+	togglePinnedNote(e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		this.setState({ 
+			// done: !this.state.note.done,
+			pinned: !this.state.pinned
+		});
+	};
 
 	handleImage(e) {
 		const reader = new FileReader();
@@ -198,8 +209,8 @@ class NoteForm extends React.Component {
 						rows="1"
 						style={{width:"600px"}}
 						autoFocus />
-					<div className='pinIcon'>
-						<div className="undone"></div>
+					<div className='pinIcon' onClick={(e) => this.togglePinnedNote(e)}>
+						<div className={this.state.pinned ? "done" : "undone"} ></div>
 					</div>
 				</div>
 				<div className='bodyDiv'>
@@ -238,18 +249,18 @@ class NoteForm extends React.Component {
 				<div className='formFooter'>
 					<div className='toolbarBtns'>
 						<div className="color-palette noteIcon">
-							<label for="colorIcon">
+							<label htmlFor="colorIcon">
 								<i class="fas fa-palette"></i>
 							</label>
 						</div>
 						<div className="img-upload noteIcon">
-							<label for="uploadImgIcon">
+							<label htmlFor="uploadImgIcon">
 								<i class="fa fa-picture-o"></i>
 							</label>
 							{/* <input id="uploadImgIcon" type="image" /> */}
 						</div>
 						<div className="archive-btn noteIcon">
-							<label for="archiveIcon">
+							<label htmlFor="archiveIcon">
 								<i class="fas fa-archive fa-md"></i>
 							</label>
 							<button id="archiveIcon" />

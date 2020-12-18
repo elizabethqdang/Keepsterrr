@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 // import Masonry from 'react-masonry-component';
 import Masonry from 'react-masonry-css';
@@ -28,12 +28,13 @@ class NoteIndex extends React.Component {
 		};
 		const randomHeight = Math.random() * (550 - 100) + 100;
 		// console.log(randomHeight);
-		const noteItems = (
+		
+		const pinnedNotes = (
 			<Masonry className="notesIndexIndividualWrapper masonry-grid"
 				breakpointCols={breakpointColumnsObj}
 				columnClassName="masonry-grid-column"
 				>
-				{this.props.notes.map(note => 
+				{this.props.pinned.map(note => 
 					<ul className="todo-list">
 						<NoteIndexItem
 							key={note.id}
@@ -49,14 +50,42 @@ class NoteIndex extends React.Component {
 				)}
 			</Masonry>
 		);
-		// console.log(noteItems);
+		
+		const otherNotes = (
+			<Masonry className="notesIndexIndividualWrapper masonry-grid"
+				breakpointCols={breakpointColumnsObj}
+				columnClassName="masonry-grid-column"
+				>
+				{this.props.other.map(note => 
+					<ul className="todo-list">
+						<NoteIndexItem
+							key={note.id}
+							// key={`note-list-item${note.id}`}
+							note={note}
+							notes={this.props.notes} 
+							users={this.props.users}
+							receiveNote={this.props.receiveNote}
+							removeNote={this.props.removeNote}
+							// style={{height:}}
+						/>
+					</ul>
+				)}
+			</Masonry>
+		);
 
 		return (
-			<div className="notesIndexWrapper">
-				<NoteFormContainer notes={this.props.notes} users={this.props.users} createNote={this.props.createNote} currentUser={this.props.currentUser} fetchAllNotes={this.props.fetchAllNotes} fetchNote={this.props.fetchNote} fetchUser={this.props.fetchUser} fetchCurrentUser={this.props.fetchCurrentUser} />
-				
-				{noteItems}
-			</div>
+			<Fragment>
+				<div className="notesIndexWrapper">
+					<div className="notesIndexWrapper">
+						<p className="pinnedText">Pinned</p>
+						{pinnedNotes}
+					</div>
+					<div className="notesIndexWrapper">
+						<p className="pinnedText">Other</p>
+						{otherNotes}
+					</div>
+				</div>
+			</Fragment>
 		);
 	}
 }

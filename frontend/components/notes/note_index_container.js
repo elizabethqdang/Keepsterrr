@@ -9,28 +9,29 @@ import { fetchUser, fetchUsers } from '../../actions/user_actions';
 
 const mapStateToProps = state => {
 	const allNotes = Object.keys(state.notes).map(id => state.notes[id]);
-	// const notes = allNotes.map((id) => allNotes[id]);
+	const pinnedNotes = allNotes.filter(note => note.pinned === true);
+	const otherNotes = allNotes.filter(note => note.pinned === false);
 	console.log("note index state", state);
 	console.log("note index allNotes", allNotes);
 	return {
 		notes: allNotes || {},
-		// notes: state.notes || {},
 		users: state.users || {},
-		// pinned: state.notes.pinned,
+		pinned: pinnedNotes || {},
+		other: otherNotes || {},
 		loggedIn: Boolean(state.session.currentUser),
 		currentUser: state.session.currentUser || {}
 	}
 };
 
 const mapDispatchToProps = dispatch => ({
-	// receiveNote: note => dispatch(receiveNote(note)),
+	receiveNote: note => dispatch(receiveNote(note)),
 	// receiveNotes: notes => dispatch(receiveAllNotes(notes)),
 	// removeNote: () => dispatch(removeNote(note)),
 	logout: (user) => dispatch(logout(null)),
 	fetchAllNotes: () => dispatch(fetchAllNotes()),
 	// fetchNotes: (userId) => dispatch(fetchNotes(userId)),
 	// fetchUser: (userId) => dispatch(fetchUser(userId)),
-	fetchCurrentUser: (id) => dispatch(fetchCurrentUser(id))
+	fetchCurrentUser: (id) => dispatch(fetchCurrentUser(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoteIndex);

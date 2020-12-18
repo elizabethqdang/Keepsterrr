@@ -11,7 +11,7 @@
   margin: 0 10px 0 0;
   opacity: 0.71;
   color: #737373;
-  visibility: hidden;
+  visibility: visible;
 }
 .note-item-toolbar:hover .noteIcon,
 .note-item-toolbar:active .noteIcon,
@@ -213,7 +213,7 @@
 
 .deleteLabel {
   display: inline-block;
-  visibility: hidden;
+  visibility: visible;
   color: #e6e6e6;
   font-size: 12px;
   padding: 2px;
@@ -268,7 +268,7 @@
   align-items: center;
   width: 240px;
   height: 34px;
-  visibility: hidden;
+  visibility: visible;
   opacity: 0;
   padding: 5px 15px 15px 15px;
   transition: opacity .65s;

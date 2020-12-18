@@ -57,16 +57,16 @@ class NoteDetail extends React.Component {
 	togglePinnedNote(e) {
 		e.preventDefault();
 		e.stopPropagation();
-
-		const toggledNote = Object.assign(
-			{},
-			this.props.note,
-			{ done: !this.props.note.done },
-			{ updated_at: new Date().getTime() },
-			{ pinned: !this.props.note.pinned }
-		);
-		this.props.receiveNote(toggledNote);
-		console.log(toggledNote);
+		
+		const editted = {
+			title: this.props.note.title,
+			body: this.props.note.body,
+			updated_at: Date (new Date().getTime()),
+			color: this.state.color,
+			pinned: !this.props.note.pinned
+		}
+		const newNote = Object.assign({}, this.props.note, editted);
+		this.props.receiveNote(newNote);
 	}
 
 	render() {
