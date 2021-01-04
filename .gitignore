@@ -29,3 +29,6 @@
 bundle.js*
 node_modules
 src/
+
+.src/
+.src

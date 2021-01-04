@@ -59,8 +59,10 @@ class UserShow extends React.Component {
 			<Fragment>
 				<Navbar />
 				<Sidebar />
-				{/* <NoteFormContainer /> */}
-				<NoteIndexContainer />
+				<div className="user-home-notes">
+					<NoteFormContainer />
+					<NoteIndexContainer />
+				</div>
 			</Fragment>
 		)
 	}

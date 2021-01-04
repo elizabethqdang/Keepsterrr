@@ -451,11 +451,13 @@ var App = function App() {
     path: "/login",
     component: _sessions_login_form_container__WEBPACK_IMPORTED_MODULE_3__["default"]
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["ProtectedRoute"], {
-    path: "/",
+    exact: true,
+    path: "/home",
     component: _user_user_show_container__WEBPACK_IMPORTED_MODULE_12__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["ProtectedRoute"], {
+    exact: true,
     path: "/notes",
-    component: _notes_note_index_container__WEBPACK_IMPORTED_MODULE_9__["default"]
+    component: _user_user_show_container__WEBPACK_IMPORTED_MODULE_12__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_util_route_util__WEBPACK_IMPORTED_MODULE_2__["ProtectedRoute"], {
     path: "/notes/:noteId",
     component: _notes_note_index_item__WEBPACK_IMPORTED_MODULE_11__["default"]
@@ -526,6 +528,7 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
     _this.navSearch = _this.navSearch.bind(_assertThisInitialized(_this));
     _this.navUserLinks = _this.navUserLinks.bind(_assertThisInitialized(_this));
     _this.logoutUser = _this.logoutUser.bind(_assertThisInitialized(_this));
+    _this.navClick = _this.navClick.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -541,6 +544,12 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
       };
     }
   }, {
+    key: "navClick",
+    value: function navClick(e) {
+      e.preventDefault();
+      window.location.hash = "/home";
+    }
+  }, {
     key: "logoutUser",
     value: function logoutUser(e) {
       e.preventDefault();
@@ -550,6 +559,8 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "navLeft",
     value: function navLeft() {
+      var _this3 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "nav-menu"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
@@ -558,11 +569,17 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
         d: "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "nav-logo"
+        className: "nav-logo",
+        onClick: function onClick(e) {
+          return _this3.navClick(e);
+        }
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         src: "https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "nav-logo-text"
+        className: "nav-logo-text",
+        onClick: function onClick(e) {
+          return _this3.navClick(e);
+        }
       }, "Keepster"));
     }
   }, {
@@ -606,7 +623,7 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "navUserLinks",
     value: function navUserLinks() {
-      var _this3 = this;
+      var _this4 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "nav-refresh",
@@ -631,7 +648,7 @@ var Navbar = /*#__PURE__*/function (_React$Component) {
         className: "dropdown-content"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         onClick: function onClick(e) {
-          return _this3.logoutUser(e);
+          return _this4.logoutUser(e);
         },
         className: "nav-sign-out"
       }, " Sign Out")))));
@@ -1214,10 +1231,21 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.submitForm = _this.submitForm.bind(_assertThisInitialized(_this));
     _this.handleImage = _this.handleImage.bind(_assertThisInitialized(_this));
+    _this.togglePinnedNote = _this.togglePinnedNote.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(NoteForm, [{
+    key: "togglePinnedNote",
+    value: function togglePinnedNote(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({
+        // done: !this.state.note.done,
+        pinned: !this.state.pinned
+      });
+    }
+  }, {
     key: "handleImage",
     value: function handleImage(e) {
       var _this2 = this;
@@ -1441,9 +1469,12 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
         },
         autoFocus: true
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "pinIcon"
+        className: "pinIcon",
+        onClick: function onClick(e) {
+          return _this4.togglePinnedNote(e);
+        }
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "undone"
+        className: this.state.pinned ? "done" : "undone"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "bodyDiv"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1484,19 +1515,19 @@ var NoteForm = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "color-palette noteIcon"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        for: "colorIcon"
+        htmlFor: "colorIcon"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         class: "fas fa-palette"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "img-upload noteIcon"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        for: "uploadImgIcon"
+        htmlFor: "uploadImgIcon"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         class: "fa fa-picture-o"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "archive-btn noteIcon"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        for: "archiveIcon"
+        htmlFor: "archiveIcon"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         class: "fas fa-archive fa-md"
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -1678,11 +1709,11 @@ var NoteIndex = /*#__PURE__*/function (_React$Component) {
       };
       var randomHeight = Math.random() * (550 - 100) + 100; // console.log(randomHeight);
 
-      var noteItems = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_masonry_css__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      var pinnedNotes = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_masonry_css__WEBPACK_IMPORTED_MODULE_2___default.a, {
         className: "notesIndexIndividualWrapper masonry-grid",
         breakpointCols: breakpointColumnsObj,
         columnClassName: "masonry-grid-column"
-      }, this.props.notes.map(function (note) {
+      }, this.props.pinned.map(function (note) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
           className: "todo-list"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_note_index_item__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -1695,20 +1726,36 @@ var NoteIndex = /*#__PURE__*/function (_React$Component) {
           removeNote: _this.props.removeNote // style={{height:}}
 
         }));
-      })); // console.log(noteItems);
+      }));
+      var otherNotes = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_masonry_css__WEBPACK_IMPORTED_MODULE_2___default.a, {
+        className: "notesIndexIndividualWrapper masonry-grid",
+        breakpointCols: breakpointColumnsObj,
+        columnClassName: "masonry-grid-column"
+      }, this.props.other.map(function (note) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+          className: "todo-list"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_note_index_item__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          key: note.id // key={`note-list-item${note.id}`}
+          ,
+          note: note,
+          notes: _this.props.notes,
+          users: _this.props.users,
+          receiveNote: _this.props.receiveNote,
+          removeNote: _this.props.removeNote // style={{height:}}
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }));
+      }));
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "notesIndexWrapper"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_note_form_container__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        notes: this.props.notes,
-        users: this.props.users,
-        createNote: this.props.createNote,
-        currentUser: this.props.currentUser,
-        fetchAllNotes: this.props.fetchAllNotes,
-        fetchNote: this.props.fetchNote,
-        fetchUser: this.props.fetchUser,
-        fetchCurrentUser: this.props.fetchCurrentUser
-      }), noteItems);
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "notesIndexWrapper"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "pinnedText"
+      }, "Pinned"), pinnedNotes), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "notesIndexWrapper"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "pinnedText"
+      }, "Other"), otherNotes)));
     }
   }]);
 
@@ -1746,15 +1793,20 @@ __webpack_require__.r(__webpack_exports__);
 var mapStateToProps = function mapStateToProps(state) {
   var allNotes = Object.keys(state.notes).map(function (id) {
     return state.notes[id];
-  }); // const notes = allNotes.map((id) => allNotes[id]);
-
+  });
+  var pinnedNotes = allNotes.filter(function (note) {
+    return note.pinned === true;
+  });
+  var otherNotes = allNotes.filter(function (note) {
+    return note.pinned === false;
+  });
   console.log("note index state", state);
   console.log("note index allNotes", allNotes);
   return {
     notes: allNotes || {},
-    // notes: state.notes || {},
     users: state.users || {},
-    // pinned: state.notes.pinned,
+    pinned: pinnedNotes || {},
+    other: otherNotes || {},
     loggedIn: Boolean(state.session.currentUser),
     currentUser: state.session.currentUser || {}
   };
@@ -1762,7 +1814,9 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    // receiveNote: note => dispatch(receiveNote(note)),
+    receiveNote: function receiveNote(note) {
+      return dispatch(Object(_actions_note_actions__WEBPACK_IMPORTED_MODULE_3__["receiveNote"])(note));
+    },
     // receiveNotes: notes => dispatch(receiveAllNotes(notes)),
     // removeNote: () => dispatch(removeNote(note)),
     logout: function logout(user) {
@@ -1896,15 +1950,15 @@ var NoteDetail = /*#__PURE__*/function (_React$Component) {
     value: function togglePinnedNote(e) {
       e.preventDefault();
       e.stopPropagation();
-      var toggledNote = Object.assign({}, this.props.note, {
-        done: !this.props.note.done
-      }, {
-        updated_at: new Date().getTime()
-      }, {
+      var editted = {
+        title: this.props.note.title,
+        body: this.props.note.body,
+        updated_at: Date(new Date().getTime()),
+        color: this.state.color,
         pinned: !this.props.note.pinned
-      });
-      this.props.receiveNote(toggledNote);
-      console.log(toggledNote);
+      };
+      var newNote = Object.assign({}, this.props.note, editted);
+      this.props.receiveNote(newNote);
     }
   }, {
     key: "render",
@@ -2862,7 +2916,9 @@ var UserShow = /*#__PURE__*/function (_React$Component) {
       // const navBar = (<Navbar />)
       // const sideBar = (<Sidebar />)
       // let noteIndex = this.noteIndex();
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_sidebar__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_notes_note_index_container__WEBPACK_IMPORTED_MODULE_4__["default"], null));
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_sidebar__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "user-home-notes"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_notes_note_form_container__WEBPACK_IMPORTED_MODULE_7__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_notes_note_index_container__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
     }
   }]);
 

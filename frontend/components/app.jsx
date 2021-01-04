@@ -22,8 +22,8 @@ const App = () => (
 			<AuthRoute exact path="/login" component={LoginForm} />
 		</Switch>
 		
-			<ProtectedRoute path="/" component={UserShowContainer} />
-			<ProtectedRoute path="/notes" component={NoteIndexContainer} />
+			<ProtectedRoute exact path="/home" component={UserShowContainer} />
+			<ProtectedRoute exact path="/notes" component={UserShowContainer} />
 			<ProtectedRoute path="/notes/:noteId" component={NoteItemShow} />
 			<ProtectedRoute path="/notes/:noteId" component={NoteUpdateContainer} />
 			{/* <ProtectedRoute exact path="/u/:userId/#LIST/:noteId" component={} /> */}

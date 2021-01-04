@@ -11,6 +11,7 @@ class Navbar extends React.Component {
 		this.navSearch = this.navSearch.bind(this);
 		this.navUserLinks = this.navUserLinks.bind(this);
 		this.logoutUser = this.logoutUser.bind(this);
+		this.navClick = this.navClick.bind(this);
 	}
 
 	updateInput(searchInput) {
@@ -20,6 +21,11 @@ class Navbar extends React.Component {
 		};
 	}
 
+	navClick(e) {
+		e.preventDefault();
+		window.location.hash = "/home";
+	}
+	
 	logoutUser(e) {
 		e.preventDefault();
 		this.props.logout();
@@ -32,10 +38,10 @@ class Navbar extends React.Component {
 				<button className="nav-menu">
 					<svg focusable="false" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
 				</button>
-				<button className="nav-logo">
+				<button className="nav-logo" onClick={(e) => this.navClick(e)}>
 					<img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" />
 				</button>
-				<button className="nav-logo-text">
+				<button className="nav-logo-text" onClick={(e) => this.navClick(e)}>
 					Keepster
 				</button>
 			</Fragment>
